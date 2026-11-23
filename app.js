@@ -4,6 +4,9 @@
 // ---------- Lettore di codici (zxing-wasm) ----------
 // Il "motore" del lettore è nel file lib/zxing_reader.wasm, servito dal nostro sito
 // (non da siti esterni).
+if (typeof ZXingWASM === 'undefined') {
+  throw new Error('il lettore di codici non si è caricato (lib/zxing-reader.js)');
+}
 ZXingWASM.prepareZXingModule({
   overrides: {
     locateFile: (percorso, prefisso) =>
@@ -62,6 +65,12 @@ async function avviaScansione() {
   btnStop.hidden = false;
   elLettore.hidden = false;
   mostraMessaggio('Avvio fotocamera…');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    fermaInterfaccia();
+    mostraMessaggio('Questo browser non permette di usare la fotocamera. Prova con Safari o Chrome aggiornati.', true);
+    return;
+  }
 
   const idCamera = leggiPreferenza('camera');
   const vincoli = {

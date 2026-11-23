@@ -24,5 +24,6 @@ La specifica dell'app (cosa fa) è in `SPEC.md`.
 - Prima di decisioni nuove o ambigue, **chiedi** all'utente.
 - Quando si decide qualcosa di nuovo, **aggiorna `SPEC.md`** (e questo file se è una regola permanente).
 - Pubblicazione: **commit e push direttamente su `main`** (GitHub Pages si aggiorna da solo in 1–2 minuti). Messaggi di commit in italiano, chiari.
+- **A ogni pubblicazione aumenta il numero di versione** in `index.html`: sia la scritta "Versione N" in fondo alla pagina, sia il `?v=N` dopo i file `.css` e `.js`. Così il telefono non usa file vecchi rimasti in memoria (cache) e l'utente può controllare quale versione sta vedendo.
 - La sessione Claude Code gira nel cloud e viene cancellata: a fine tappa tutto va salvato su GitHub.
 - Interfaccia dell'app in italiano, pensata per il pollice: pulsanti grandi, pochi passaggi.
