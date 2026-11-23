@@ -68,5 +68,9 @@ Il foglio si può aprire e modificare anche a mano.
 | 8 | Avvisi email di scadenza | più avanti |
 
 ## Note tecniche
-- Lettura codici a barre: libreria **html5-qrcode** 2.3.8 (licenza Apache 2.0), salvata in `lib/`. Formati letti: EAN-13, EAN-8, UPC-A, UPC-E (i codici dei prodotti al supermercato).
+- Lettura codici a barre: libreria **zxing-wasm** 3.1.6 (licenza MIT), salvata in `lib/` (file `.js` + motore `.wasm`). Formati letti: EAN-13, EAN-8, UPC-A, UPC-E (i codici dei prodotti al supermercato).
+  - Prima prova con html5-qrcode: scartata perché rimpicciolisce l'immagine e non legge i codici piccoli (sull'iPhone bisogna tenere il prodotto lontano per metterlo a fuoco).
+  - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
+  - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 2×): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
+  - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
 - Sito: https://federicoamt.github.io/dispensa/

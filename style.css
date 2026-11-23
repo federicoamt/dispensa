@@ -64,15 +64,80 @@ button.grande.secondario {
 
 button:active { opacity: 0.7; }
 
-#lettore {
+.lettore {
+  position: relative;
   width: 100%;
+  aspect-ratio: 4 / 3;
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 12px;
   background: #000;
 }
 
-#lettore video { width: 100% !important; display: block; }
+.lettore video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Il mirino: deve avere le stesse proporzioni dell'area letta (85% x 50%) */
+.mirino {
+  position: absolute;
+  left: 7.5%;
+  top: 25%;
+  width: 85%;
+  height: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.zoom {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: -4px 0 12px;
+}
+
+.zoom button {
+  min-width: 56px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--bordo);
+  background: var(--carta);
+  color: var(--testo);
+}
+
+.zoom button.attivo {
+  background: var(--verde);
+  border-color: var(--verde);
+  color: #fff;
+}
+
+.opzioni {
+  margin-top: 28px;
+  color: var(--grigio);
+}
+
+.opzioni summary { padding: 8px 0; }
+
+.opzioni label { display: block; margin: 8px 0 4px; }
+
+.opzioni select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--bordo);
+  background: var(--carta);
+  color: var(--testo);
+}
+
+.nota { font-size: 0.85rem; }
 
 .messaggio { min-height: 1.4em; color: var(--grigio); text-align: center; }
 .messaggio.errore { color: #c62828; }

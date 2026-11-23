@@ -13,8 +13,14 @@
   </header>
 
   <main>
-    <!-- Riquadro dove compare l'immagine della fotocamera -->
-    <div id="lettore" hidden></div>
+    <!-- Riquadro della fotocamera -->
+    <div id="lettore" class="lettore" hidden>
+      <video id="video" playsinline muted autoplay></video>
+      <div class="mirino"></div>
+    </div>
+
+    <!-- Pulsanti dello zoom (compaiono solo se il telefono lo permette) -->
+    <div id="zoom" class="zoom" hidden></div>
 
     <button id="btn-scansiona" class="grande">📷 Scansiona codice</button>
     <button id="btn-stop" class="grande secondario" hidden>Annulla</button>
@@ -30,10 +36,20 @@
       <p class="etichetta">Ultime letture</p>
       <ul id="storico-letture" class="lista"></ul>
     </section>
+
+    <details class="opzioni">
+      <summary>Opzioni fotocamera</summary>
+      <label for="scelta-camera">Fotocamera da usare</label>
+      <select id="scelta-camera">
+        <option value="">Automatica (posteriore)</option>
+      </select>
+      <p class="nota">L'elenco si riempie dopo la prima scansione. Se una fotocamera non mette a fuoco da vicino, provane un'altra.</p>
+      <p id="diagnosi" class="nota"></p>
+    </details>
   </main>
 
-  <!-- Libreria gratuita (Apache 2.0) che legge i codici a barre dalla fotocamera -->
-  <script src="lib/html5-qrcode.min.js"></script>
+  <!-- Lettore di codici a barre gratuito (zxing-wasm, licenza MIT) -->
+  <script src="lib/zxing-reader.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
