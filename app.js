@@ -144,7 +144,7 @@ async function preparaZoom() {
   if (livelli.length < 2) return;
 
   const salvato = parseFloat(leggiPreferenza('zoom'));
-  const iniziale = livelli.includes(salvato) ? salvato : (livelli.includes(2) ? 2 : livelli[0]);
+  const iniziale = livelli.includes(salvato) ? salvato : (livelli.includes(1.5) ? 1.5 : livelli[0]);
 
   for (const z of livelli) {
     const b = document.createElement('button');

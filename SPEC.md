@@ -58,7 +58,7 @@ Il foglio si può aprire e modificare anche a mano.
 | # | Tappa | Stato |
 |---|---|---|
 | 0 | Preparazione: repository, CLAUDE.md, SPEC.md, GitHub Pages | fatto |
-| 1 | Pagina con fotocamera che legge il codice a barre | da provare su iPhone |
+| 1 | Pagina con fotocamera che legge il codice a barre | fatto |
 | 2 | Google Sheet + Apps Script + schermata Impostazioni | da fare |
 | 3 | IN | da fare |
 | 4 | LISTA | da fare |
@@ -71,6 +71,6 @@ Il foglio si può aprire e modificare anche a mano.
 - Lettura codici a barre: libreria **zxing-wasm** 3.1.6 (licenza MIT), salvata in `lib/` (file `.js` + motore `.wasm`). Formati letti: EAN-13, EAN-8, UPC-A, UPC-E (i codici dei prodotti al supermercato).
   - Prima prova con html5-qrcode: scartata perché rimpicciolisce l'immagine e non legge i codici piccoli (sull'iPhone bisogna tenere il prodotto lontano per metterlo a fuoco).
   - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
-  - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 2×): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
+  - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
 - Sito: https://federicoamt.github.io/dispensa/
