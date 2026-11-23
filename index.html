@@ -2,15 +2,38 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2e7d32">
   <title>Dispensa</title>
-  <style>
-    body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 32px 16px; text-align: center; background: #fff; color: #222; }
-    h1 { font-size: 2rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Ciao! 👋</h1>
-  <p>L'app Dispensa è online. Tappa 0 completata.</p>
+  <header>
+    <h1>Dispensa</h1>
+  </header>
+
+  <main>
+    <!-- Riquadro dove compare l'immagine della fotocamera -->
+    <div id="lettore" hidden></div>
+
+    <button id="btn-scansiona" class="grande">📷 Scansiona codice</button>
+    <button id="btn-stop" class="grande secondario" hidden>Annulla</button>
+
+    <p id="messaggio" class="messaggio"></p>
+
+    <section id="risultato" hidden>
+      <p class="etichetta">Codice letto</p>
+      <p id="codice" class="codice"></p>
+    </section>
+
+    <section>
+      <p class="etichetta">Ultime letture</p>
+      <ul id="storico-letture" class="lista"></ul>
+    </section>
+  </main>
+
+  <!-- Libreria gratuita (Apache 2.0) che legge i codici a barre dalla fotocamera -->
+  <script src="lib/html5-qrcode.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

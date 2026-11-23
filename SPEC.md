@@ -57,8 +57,8 @@ Il foglio si può aprire e modificare anche a mano.
 ## Tappe
 | # | Tappa | Stato |
 |---|---|---|
-| 0 | Preparazione: repository, CLAUDE.md, SPEC.md, GitHub Pages | in corso |
-| 1 | Pagina con fotocamera che legge il codice a barre | da fare |
+| 0 | Preparazione: repository, CLAUDE.md, SPEC.md, GitHub Pages | fatto |
+| 1 | Pagina con fotocamera che legge il codice a barre | da provare su iPhone |
 | 2 | Google Sheet + Apps Script + schermata Impostazioni | da fare |
 | 3 | IN | da fare |
 | 4 | LISTA | da fare |
@@ -66,3 +66,7 @@ Il foglio si può aprire e modificare anche a mano.
 | 6 | Nome da Open Food Facts + memoria nomi | da fare |
 | 7 | Rifiniture: icona, schermata Home | da fare |
 | 8 | Avvisi email di scadenza | più avanti |
+
+## Note tecniche
+- Lettura codici a barre: libreria **html5-qrcode** 2.3.8 (licenza Apache 2.0), salvata in `lib/`. Formati letti: EAN-13, EAN-8, UPC-A, UPC-E (i codici dei prodotti al supermercato).
+- Sito: https://federicoamt.github.io/dispensa/
