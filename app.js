@@ -12,7 +12,7 @@ const elMessaggio = el('messaggio');
 const inCodice = el('in-codice');
 const inNome = el('in-nome');
 const inNomeStato = el('in-nome-stato');
-const inData = el('in-data');
+const btnScegliData = el('btn-scegli-data');
 const inDataTesto = el('in-data-testo');
 const inDataLeggibile = el('in-data-leggibile');
 const elScorciatoie = el('scorciatoie');
@@ -44,6 +44,7 @@ function mostra(parte) {
 /** Torna alla schermata iniziale spegnendo la fotocamera (usata anche da Impostazioni). */
 function tornaAllaHome() {
   Scanner.ferma();
+  SelettoreData.chiudi();
   mostra('home');
 }
 
@@ -93,10 +94,11 @@ async function cercaNome(codice) {
   }
 }
 
-/** Imposta la scadenza scelta e aggiorna calendario, scorciatoie e testo leggibile. */
+/** Imposta la scadenza scelta e aggiorna pulsante della data, scorciatoie e testo leggibile. */
 function impostaScadenza(testo, origine) {
   modulo.scadenza = testo;
-  if (origine !== 'calendario') inData.value = testo;
+  btnScegliData.textContent = testo ? '📅 ' + Data.breve(testo) + ' (cambia)' : '📅 Scegli la data';
+  btnScegliData.classList.toggle('scelta', Boolean(testo));
   if (origine !== 'scorciatoia') {
     for (const b of elScorciatoie.children) b.classList.remove('attivo');
   }
@@ -123,9 +125,11 @@ elScorciatoie.addEventListener('click', (e) => {
   impostaScadenza(data, 'scorciatoia');
 });
 
-inData.addEventListener('change', () => {
-  inDataTesto.value = '';
-  impostaScadenza(inData.value, 'calendario');
+btnScegliData.addEventListener('click', () => {
+  SelettoreData.apri((data) => {
+    inDataTesto.value = '';
+    impostaScadenza(data, 'selettore');
+  });
 });
 
 inDataTesto.addEventListener('input', () => {
@@ -136,7 +140,8 @@ inDataTesto.addEventListener('input', () => {
     impostaScadenza(data, 'testo');
   } else {
     modulo.scadenza = '';
-    inData.value = '';
+    btnScegliData.textContent = '📅 Scegli la data';
+    btnScegliData.classList.remove('scelta');
     for (const b of elScorciatoie.children) b.classList.remove('attivo');
     inDataLeggibile.textContent = 'Non riconosco una data (es. 12/03/27, 03/2027, 12 MAR 2027).';
     inDataLeggibile.className = 'data-leggibile errore';

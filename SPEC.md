@@ -10,10 +10,10 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 
 ### IN — aggiungere un prodotto
 1. Tocco "➕ Aggiungi prodotto" → si apre la fotocamera → inquadro il codice a barre.
-2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi (tappa 6) su Open Food Facts. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive. Il nome proposto si può sempre modificare (il nuovo nome viene ricordato).
+2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi (tappa 6) su Open Food Facts. Richiesta dell'utente: il nome va chiesto **solo** se il prodotto non si trova in nessuna delle due liste. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive. Il nome proposto si può sempre modificare (il nuovo nome viene ricordato).
 3. Scelgo la data di scadenza in uno di tre modi:
+   - **pulsante "📅 Scegli la data"** (modo principale, richiesto dall'utente): si apre una finestra dal basso con tre passaggi da un tocco ciascuno — **giorno** (1–31) → **mese** (gen–dic) → **anno** (anno corrente + 10). Le combinazioni impossibili (31 aprile, 29 febbraio negli anni non bisestili) e le date già passate sono disattivate. Freccia ← per tornare al passo precedente, ✕ o tocco sullo sfondo per chiudere;
    - scorciatoie: +3 giorni, +1 sett., +2 sett., +1 mese, +3 mesi, +6 mesi, +1 anno, +2 anni;
-   - calendario (selettore di data dell'iPhone);
    - campo di testo dove scrivere o "scansionare" (funzione Scansiona testo di iOS) la data stampata. Riconosce ad esempio `12/03/2027`, `12.03.27`, `120327`, `12 MAR 2027`, frasi intere tipo "da consumarsi entro il 12/03/27", `03/2027` o `MAR 2027` (= ultimo giorno del mese), `12/12` (= il prossimo 12 dicembre).
    Sotto compare la data in chiaro (es. "ven 4 dicembre 2026 · tra 7 giorni"); se è già passata è in rosso (si può comunque salvare).
 4. Scelgo quanti pezzi con − / + (da 1 a 20, predefinito 1).
@@ -91,7 +91,7 @@ Il foglio si può aprire e modificare anche a mano.
   - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
   - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
-- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `impostazioni.js` (collegamento al foglio e Impostazioni), `app.js` (schermate e operazioni).
+- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `app.js` (schermate e operazioni).
 - Niente espressioni regolari con "lookbehind" `(?<…)`: non funzionano su iOS più vecchi di 16.4.
 - Sito: https://federicoamt.github.io/dispensa/
 - Da ricordare per la tappa 7: su iPhone l'app aggiunta alla schermata Home ha una memoria separata dal browser, quindi URL e chiave andranno reinseriti lì.

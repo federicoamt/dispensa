@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2e7d32">
   <title>Dispensa</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <header>
@@ -52,6 +52,8 @@
       <p id="in-nome-stato" class="nota"></p>
 
       <label class="campo">Scadenza</label>
+      <button type="button" id="btn-scegli-data" class="scegli-data">📅 Scegli la data</button>
+      <p class="sotto">Oppure una scorciatoia:</p>
       <div id="scorciatoie" class="scorciatoie">
         <button type="button" data-giorni="3">+3 giorni</button>
         <button type="button" data-giorni="7">+1 sett.</button>
@@ -61,10 +63,6 @@
         <button type="button" data-mesi="6">+6 mesi</button>
         <button type="button" data-mesi="12">+1 anno</button>
         <button type="button" data-mesi="24">+2 anni</button>
-      </div>
-      <div class="riga-data">
-        <label for="in-data">Calendario</label>
-        <input id="in-data" type="date">
       </div>
       <label class="sotto" for="in-data-testo">Oppure scrivi (o scansiona) la data stampata</label>
       <input id="in-data-testo" type="text" inputmode="text" enterkeyhint="done" placeholder="es. 12/03/27">
@@ -115,8 +113,23 @@
     <button id="btn-indietro" class="grande secondario">← Indietro</button>
   </main>
 
+  <!-- ===== Selettore della data (giorno → mese → anno) ===== -->
+  <div id="selettore-data" class="sd-sfondo" hidden>
+    <div class="sd-riquadro" role="dialog" aria-modal="true" aria-labelledby="sd-titolo">
+      <div class="sd-testata">
+        <button type="button" id="sd-indietro" class="sd-icona" aria-label="Passo precedente" hidden>←</button>
+        <div class="sd-centro">
+          <p id="sd-titolo" class="sd-titolo">Giorno</p>
+          <p id="sd-riepilogo" class="sd-riepilogo"></p>
+        </div>
+        <button type="button" id="sd-chiudi" class="sd-icona" aria-label="Chiudi">✕</button>
+      </div>
+      <div id="sd-griglia" class="sd-griglia"></div>
+    </div>
+  </div>
+
   <!-- Versione dell'app: si vede in fondo alla pagina -->
-  <p class="versione">Versione 6</p>
+  <p class="versione">Versione 7</p>
 
   <!-- Se qualcosa si rompe, mostra l'errore sullo schermo invece di non fare nulla -->
   <script>
@@ -133,12 +146,13 @@
   </script>
 
   <!-- Lettore di codici a barre gratuito (zxing-wasm, licenza MIT).
-       Il "?v=6" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
-  <script src="lib/zxing-reader.js?v=6"></script>
-  <script src="date.js?v=6"></script>
-  <script src="scanner.js?v=6"></script>
+       Il "?v=7" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
+  <script src="lib/zxing-reader.js?v=7"></script>
+  <script src="date.js?v=7"></script>
+  <script src="scanner.js?v=7"></script>
+  <script src="selettore-data.js?v=7"></script>
   <!-- Collegamento al Google Sheet e schermata Impostazioni -->
-  <script src="impostazioni.js?v=6"></script>
-  <script src="app.js?v=6"></script>
+  <script src="impostazioni.js?v=7"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

@@ -75,8 +75,7 @@ label.campo {
 }
 
 input[type="url"],
-input[type="text"],
-input[type="date"] {
+input[type="text"] {
   width: 100%;
   padding: 14px 12px;
   margin-bottom: 4px;
@@ -272,24 +271,7 @@ form .nota { margin: 4px 0 0; color: var(--grigio); }
   color: #fff;
 }
 
-.riga-data {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.riga-data label { flex: 0 0 auto; color: var(--grigio); }
-
-.riga-data input[type="date"] {
-  flex: 1;
-  margin: 0;
-  min-height: 48px;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-label.sotto {
+label.sotto, p.sotto {
   display: block;
   margin: 10px 0 6px;
   color: var(--grigio);
@@ -329,3 +311,83 @@ label.sotto {
 
 #form-in .grande { margin-top: 12px; }
 #btn-salva { margin-top: 20px; }
+
+/* ---------- Pulsante "Scegli la data" ---------- */
+.scegli-data {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 2px dashed var(--verde);
+  background: var(--carta);
+  color: var(--testo);
+}
+.scegli-data.scelta { border-style: solid; }
+
+/* ---------- Selettore della data (finestra che sale dal basso) ---------- */
+body.bloccato { overflow: hidden; }
+
+.sd-sfondo {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.sd-riquadro {
+  width: 100%;
+  max-width: 520px;
+  padding: 12px 12px calc(env(safe-area-inset-bottom) + 16px);
+  background: var(--sfondo);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.sd-testata {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sd-centro { flex: 1; text-align: center; }
+.sd-titolo { margin: 0; font-size: 1.2rem; font-weight: 700; }
+.sd-riepilogo { margin: 2px 0 0; color: var(--grigio); }
+
+.sd-icona {
+  width: 48px;
+  height: 48px;
+  font-size: 1.4rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--carta);
+  color: var(--testo);
+}
+/* Il pulsante "indietro" nascosto lascia comunque il suo spazio, così il titolo resta centrato */
+.sd-icona[hidden] { display: block !important; visibility: hidden; }
+
+.sd-griglia {
+  display: grid;
+  gap: 8px;
+}
+.sd-giorno { grid-template-columns: repeat(7, 1fr); }
+.sd-mese, .sd-anno { grid-template-columns: repeat(3, 1fr); }
+
+.sd-griglia button {
+  min-height: 48px;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid var(--bordo);
+  background: var(--carta);
+  color: var(--testo);
+}
+.sd-mese button, .sd-anno button { min-height: 60px; font-size: 1.15rem; }
+.sd-griglia button:disabled { opacity: 0.25; }
+.sd-griglia button:active:not(:disabled) { background: var(--verde); color: #fff; }
