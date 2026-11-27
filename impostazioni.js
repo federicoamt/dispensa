@@ -70,6 +70,7 @@ const Collegamento = (() => {
       });
     } catch (err) {
       if (err.name === 'AbortError') throw new Error('Il foglio non risponde (tempo scaduto). Controlla la connessione e riprova.');
+      if (navigator.onLine === false) throw new Error('Sei offline: controlla la connessione internet.');
       throw new Error(
         "Non riesco a contattare lo script. Controlla l'indirizzo e che in \"Chi ha accesso\" sia scelto \"Chiunque\"."
       );
@@ -134,6 +135,7 @@ const Collegamento = (() => {
     vistaImpostazioni.hidden = true;
     vistaPrincipale.hidden = false;
     aggiornaAvviso();
+    if (typeof Lista !== 'undefined') Lista.carica(); // il collegamento potrebbe essere cambiato
   }
 
   async function salvaEProva() {

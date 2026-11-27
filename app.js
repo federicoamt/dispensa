@@ -1,5 +1,5 @@
 // Dispensa — schermate e operazioni.
-// Tappa 3: IN (aggiungere un prodotto).
+// IN (aggiungere un prodotto) e schermata iniziale con la LISTA (lista.js).
 
 // ---------- Elementi della pagina ----------
 const el = (id) => document.getElementById(id);
@@ -133,7 +133,7 @@ formIn.addEventListener('submit', async (e) => {
   btnSalva.disabled = true;
   btnSalva.textContent = 'Salvo…';
   try {
-    await Collegamento.chiama('aggiungi', {
+    const r = await Collegamento.chiama('aggiungi', {
       codice: modulo.codice,
       nome,
       scadenza: modulo.scadenza,
@@ -141,7 +141,7 @@ formIn.addEventListener('submit', async (e) => {
     });
     const quanti = modulo.pezzi > 1 ? ' ×' + modulo.pezzi : '';
     mostraMessaggio('✅ Salvato: ' + nome + quanti + ' (scade il ' + Data.breve(modulo.scadenza) + ')', 'successo');
-    aggiungiAUltime(nome + quanti, Data.breve(modulo.scadenza));
+    Lista.mostra(r.prodotti || []); // lo script restituisce già la lista aggiornata
     mostra('home');
   } catch (err) {
     inErrore.textContent = '❌ Non salvato: ' + err.message;
@@ -151,23 +151,20 @@ formIn.addEventListener('submit', async (e) => {
   }
 });
 
-/** Piccolo elenco di conferma di ciò che è stato aggiunto in questa sessione. */
-function aggiungiAUltime(testo, scadenza) {
-  const lista = el('ultime-aggiunte');
-  const li = document.createElement('li');
-  li.textContent = testo;
-  const span = document.createElement('span');
-  span.textContent = scadenza;
-  li.appendChild(span);
-  lista.prepend(li);
-  while (lista.children.length > 5) lista.lastChild.remove();
-  el('sezione-ultime').hidden = false;
-}
-
 // ---------- Pulsanti ----------
 el('btn-in').addEventListener('click', iniziaIn);
 el('btn-annulla-scansione').addEventListener('click', tornaAllaHome);
 el('btn-annulla-in').addEventListener('click', () => {
   mostraMessaggio('');
   mostra('home');
+});
+
+// ---------- Avvio dell'app ----------
+Lista.mostraDallaMemoria(); // subito l'ultima lista conosciuta…
+Lista.carica();             // …poi quella aggiornata dal foglio
+
+// Quando si torna sull'app (es. dopo averla lasciata aperta in background), riaggiorna la lista:
+// così si vedono anche i prodotti aggiunti o tolti dall'altro telefono.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !sezioneHome.hidden) Lista.carica();
 });

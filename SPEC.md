@@ -23,13 +23,18 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 4. Se il codice non è in dispensa: messaggio "Non trovato in dispensa", nessuna modifica.
 
 ### LISTA
-- Mostra i prodotti presenti, ordinati per scadenza (prima quelli che scadono prima).
-- Colori:
+- Sta nella schermata principale, sotto "➕ Aggiungi prodotto". Titolo con il totale dei pezzi ("In dispensa · 10 pezzi").
+- Prodotti presenti ordinati per scadenza (prima quelli che scadono prima; quelli senza data in fondo).
+- Pezzi uguali (stesso codice, nome e scadenza) raggruppati in una riga con "×N".
+- Ogni riga: nome, data (gg/mm/aaaa) e distanza ("tra 5 giorni", "domani", "scade oggi", "scaduto da 2 giorni").
+- Colori (sfondo e bordo):
   - **Rosso**: scaduto
-  - **Arancione**: scade entro 3 giorni
-  - **Giallo**: scade entro 7 giorni
+  - **Arancione**: scade oggi o entro 3 giorni
+  - **Giallo**: scade tra 4 e 7 giorni
   - Normale: oltre 7 giorni
-- Pezzi uguali con la stessa scadenza possono essere mostrati raggruppati (es. "Yogurt ×3").
+- Riepilogo sopra la lista: "🔴 1 scaduto  🟠 4 entro 3 giorni  🟡 1 entro 7 giorni" (solo le voci presenti).
+- Aggiornamento: all'apertura dell'app, quando si torna sull'app dopo averla lasciata in background (per vedere le modifiche dell'altro telefono), dopo ogni salvataggio, e con il pulsante "↻ Aggiorna".
+- L'ultima lista ricevuta resta in memoria nel telefono e compare subito all'apertura, mentre arriva quella aggiornata. Senza connessione resta visibile con un messaggio d'errore.
 
 ### Impostazioni
 - Si aprono con ⚙️ in alto a destra (o toccando l'avviso giallo "Google Sheet non collegato").
@@ -78,8 +83,8 @@ Il foglio si può aprire e modificare anche a mano.
 | 0 | Preparazione: repository, CLAUDE.md, SPEC.md, GitHub Pages | fatto |
 | 1 | Pagina con fotocamera che legge il codice a barre | fatto |
 | 2 | Google Sheet + Apps Script + schermata Impostazioni | fatto |
-| 3 | IN | da provare su iPhone |
-| 4 | LISTA | da fare |
+| 3 | IN | fatto |
+| 4 | LISTA | da provare su iPhone |
 | 5 | OUT | da fare |
 | 6 | Nome da Open Food Facts + memoria nomi | da fare |
 | 7 | Rifiniture: icona, schermata Home | da fare |
@@ -91,7 +96,7 @@ Il foglio si può aprire e modificare anche a mano.
   - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
   - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
-- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `app.js` (schermate e operazioni).
+- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `lista.js` (lista dei prodotti), `app.js` (schermate e operazioni).
 - Niente espressioni regolari con "lookbehind" `(?<…)`: non funzionano su iOS più vecchi di 16.4.
 - Sito: https://federicoamt.github.io/dispensa/
 - Da ricordare per la tappa 7: su iPhone l'app aggiunta alla schermata Home ha una memoria separata dal browser, quindi URL e chiave andranno reinseriti lì.

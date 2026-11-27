@@ -73,11 +73,11 @@ const Data = (() => {
     return m ? m[3] + '/' + m[2] + '/' + m[1] : '';
   }
 
-  /** "tra 7 giorni", "domani", "oggi", "scaduto da 2 giorni" */
+  /** "tra 7 giorni", "domani", "scade oggi", "scaduto da 2 giorni" */
   function distanza(testo, adesso = new Date()) {
     const g = giorniMancanti(testo, adesso);
     if (g === null) return '';
-    if (g === 0) return 'oggi';
+    if (g === 0) return 'scade oggi';
     if (g === 1) return 'domani';
     if (g === -1) return 'scaduto ieri';
     if (g < 0) return 'scaduto da ' + -g + ' giorni';

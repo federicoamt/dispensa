@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2e7d32">
   <title>Dispensa</title>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <header>
@@ -24,10 +24,15 @@
     <section id="home">
       <button id="btn-in" class="grande">➕ Aggiungi prodotto</button>
       <p id="messaggio" class="messaggio"></p>
-      <div id="sezione-ultime" hidden>
-        <p class="etichetta">Aggiunti adesso</p>
-        <ul id="ultime-aggiunte" class="lista"></ul>
+
+      <!-- Lista dei prodotti in dispensa -->
+      <div class="lista-testata">
+        <p id="lista-titolo" class="etichetta">In dispensa</p>
+        <button id="btn-aggiorna" type="button" class="link">↻ Aggiorna</button>
       </div>
+      <p id="lista-riepilogo" class="riepilogo"></p>
+      <ul id="lista-prodotti" class="prodotti"></ul>
+      <p id="lista-stato" class="nota centrata"></p>
     </section>
 
     <!-- Fotocamera -->
@@ -116,7 +121,7 @@
   </div>
 
   <!-- Versione dell'app: si vede in fondo alla pagina -->
-  <p class="versione">Versione 8</p>
+  <p class="versione">Versione 9</p>
 
   <!-- Se qualcosa si rompe, mostra l'errore sullo schermo invece di non fare nulla -->
   <script>
@@ -133,13 +138,15 @@
   </script>
 
   <!-- Lettore di codici a barre gratuito (zxing-wasm, licenza MIT).
-       Il "?v=8" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
-  <script src="lib/zxing-reader.js?v=8"></script>
-  <script src="date.js?v=8"></script>
-  <script src="scanner.js?v=8"></script>
-  <script src="selettore-data.js?v=8"></script>
+       Il "?v=9" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
+  <script src="lib/zxing-reader.js?v=9"></script>
+  <script src="date.js?v=9"></script>
+  <script src="scanner.js?v=9"></script>
+  <script src="selettore-data.js?v=9"></script>
   <!-- Collegamento al Google Sheet e schermata Impostazioni -->
-  <script src="impostazioni.js?v=8"></script>
-  <script src="app.js?v=8"></script>
+  <script src="impostazioni.js?v=9"></script>
+  <!-- Lista dei prodotti -->
+  <script src="lista.js?v=9"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

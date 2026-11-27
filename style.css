@@ -1,5 +1,13 @@
 :root {
   --verde: #2e7d32;
+  --verde-testo: #2e7d32;
+  /* Colori della lista: sfondo e bordo per scaduti / entro 3 giorni / entro 7 giorni */
+  --rosso-sfondo: #fde7e7;
+  --rosso-bordo: #c62828;
+  --arancione-sfondo: #fff0e0;
+  --arancione-bordo: #ef6c00;
+  --giallo-sfondo: #fffbd9;
+  --giallo-bordo: #d4b100;
   --sfondo: #f6f6f4;
   --testo: #1f1f1f;
   --grigio: #6b6b6b;
@@ -14,6 +22,13 @@
     --grigio: #a0a0a0;
     --bordo: #333333;
     --carta: #1f1f1f;
+    --verde-testo: #66bb6a;
+    --rosso-sfondo: #3a1616;
+    --rosso-bordo: #ef5350;
+    --arancione-sfondo: #3a2610;
+    --arancione-bordo: #ff9800;
+    --giallo-sfondo: #35310f;
+    --giallo-bordo: #e6c700;
   }
   .messaggio.successo, .data-leggibile.scelta { color: #66bb6a; }
 }
@@ -205,25 +220,6 @@ button:active { opacity: 0.7; }
 }
 
 
-.lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.lista li {
-  padding: 12px 16px;
-  background: var(--carta);
-  border: 1px solid var(--bordo);
-  border-radius: 10px;
-  margin-bottom: 6px;
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-}
-
-.lista li span { color: var(--grigio); flex: 0 0 auto; }
-
 .versione {
   text-align: center;
   font-size: 0.75rem;
@@ -362,3 +358,83 @@ body.bloccato { overflow: hidden; }
 .sd-mese button, .sd-anno button { min-height: 60px; font-size: 1.15rem; }
 .sd-griglia button:disabled { opacity: 0.25; }
 .sd-griglia button:active:not(:disabled) { background: var(--verde); color: #fff; }
+
+/* ---------- Lista dei prodotti ---------- */
+.lista-testata {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.lista-testata .etichetta { margin-top: 8px; }
+
+#home .messaggio { margin: 4px 0; min-height: 0; }
+
+button.link {
+  padding: 8px 0 8px 12px;
+  font-size: 0.95rem;
+  background: none;
+  border: none;
+  color: var(--verde-testo);
+  font-weight: 600;
+}
+
+.riepilogo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+}
+.riepilogo span { white-space: nowrap; }
+
+.prodotti {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.prodotto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  background: var(--carta);
+  border: 1px solid var(--bordo);
+  border-left: 6px solid var(--bordo);
+  border-radius: 10px;
+}
+
+.prodotto.scaduto   { background: var(--rosso-sfondo);     border-color: var(--rosso-bordo); }
+.prodotto.arancione { background: var(--arancione-sfondo); border-color: var(--arancione-bordo); }
+.prodotto.giallo    { background: var(--giallo-sfondo);    border-color: var(--giallo-bordo); }
+
+.prodotto-nome {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.quanti {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-size: 0.85rem;
+  border-radius: 999px;
+  background: var(--sfondo);
+  border: 1px solid var(--bordo);
+}
+
+.prodotto-data {
+  flex: 0 0 auto;
+  text-align: right;
+  line-height: 1.25;
+}
+
+.prodotto-data .data { display: block; font-weight: 600; }
+.prodotto-data .distanza { display: block; font-size: 0.8rem; color: var(--grigio); }
+.prodotto.scaduto .distanza { color: var(--rosso-bordo); font-weight: 600; }
+
+.centrata { text-align: center; }
+.nota.errore { color: #c62828; }
