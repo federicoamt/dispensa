@@ -75,24 +75,45 @@ function apriModuloIn(codice) {
   cercaNome(codice);
 }
 
-/** Cerca il nome già usato in passato per questo codice (foglio "Prodotti"). */
+/**
+ * Cerca il nome del prodotto: prima tra quelli già inseriti (foglio "Prodotti"),
+ * poi su Open Food Facts. Le due ricerche partono insieme per fare prima.
+ * Il nome va scritto a mano solo se non si trova da nessuna parte.
+ */
 async function cercaNome(codice) {
   inNomeStato.textContent = 'Cerco il nome…';
+  const daOFF = OpenFoodFacts.cercaNome(codice);
+  let ricordato = '';
+  let erroreFoglio = '';
   try {
-    const r = await Collegamento.chiama('nome', { codice });
-    if (modulo.codice !== codice) return; // nel frattempo è cambiato prodotto
-    if (r.nome && !inNome.value.trim()) {
-      inNome.value = r.nome;
-      inNomeStato.textContent = '✓ Nome ricordato dall\'ultima volta (puoi modificarlo).';
-    } else if (!r.nome) {
-      inNomeStato.textContent = 'Prodotto nuovo: scrivi il nome, la prossima volta lo ricorderò.';
-    } else {
-      inNomeStato.textContent = '';
-    }
+    ricordato = (await Collegamento.chiama('nome', { codice })).nome || '';
   } catch (err) {
-    if (modulo.codice !== codice) return;
-    inNomeStato.textContent = 'Non riesco a cercare il nome (' + err.message + '). Scrivilo a mano.';
+    erroreFoglio = err.message;
   }
+  if (modulo.codice !== codice) return; // nel frattempo è cambiato prodotto
+  if (ricordato) return proponiNome(ricordato, '✓ Nome ricordato dall\'ultima volta (puoi modificarlo).');
+
+  const r = await daOFF;
+  if (modulo.codice !== codice) return;
+  if (r.nome) return proponiNome(r.nome, '✓ Nome trovato su Open Food Facts (puoi modificarlo).');
+
+  if (erroreFoglio) {
+    inNomeStato.textContent = 'Non riesco a cercare il nome (' + erroreFoglio + '). Scrivilo a mano.';
+  } else if (r.errore) {
+    inNomeStato.textContent = 'Open Food Facts ' + r.errore + ': scrivi il nome, la prossima volta lo ricorderò.';
+  } else {
+    inNomeStato.textContent = 'Prodotto nuovo: scrivi il nome, la prossima volta lo ricorderò.';
+  }
+}
+
+/** Mette il nome trovato nel campo, a meno che l'utente non abbia già iniziato a scriverne uno. */
+function proponiNome(nome, spiegazione) {
+  if (inNome.value.trim()) {
+    inNomeStato.textContent = '';
+    return;
+  }
+  inNome.value = nome;
+  inNomeStato.textContent = spiegazione;
 }
 
 /** Imposta la scadenza scelta e aggiorna il pulsante della data e il testo leggibile. */

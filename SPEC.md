@@ -10,7 +10,11 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 
 ### IN — aggiungere un prodotto
 1. Tocco "+ Aggiungi" → si apre la fotocamera → inquadro il codice a barre.
-2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi (tappa 6) su Open Food Facts. Richiesta dell'utente: il nome va chiesto **solo** se il prodotto non si trova in nessuna delle due liste. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive. Il nome proposto si può sempre modificare (il nuovo nome viene ricordato).
+2. L'app cerca il nome, e lo chiede **solo** se non lo trova (richiesta dell'utente):
+   - prima nella memoria dei nomi (foglio `Prodotti`: i prodotti già inseriti, con eventuali correzioni fatte a mano nel foglio) — ha la precedenza;
+   - poi su **Open Food Facts** (le due ricerche partono insieme). Nome composto da: nome italiano del prodotto (o quello generico) + marca, se non già contenuta nel nome; massimo 60 caratteri. Esempio: "Spaghetti n°5 Barilla".
+   - se trovato, il nome compare già scritto con la fonte ("✓ Nome ricordato…" / "✓ Nome trovato su Open Food Facts…") e si può modificare; il nome salvato (eventualmente corretto) finisce in `Prodotti` e la volta dopo viene da lì.
+   - se non trovato: "Prodotto nuovo: scrivi il nome…". Se Open Food Facts non risponde entro 6 secondi o non è raggiungibile, lo dice e si scrive il nome a mano.
 3. Scelgo la data di scadenza con il pulsante **"📅 Scegli la data"** (unico modo, scelta dell'utente per semplicità): si apre una finestra dal basso con tre passaggi da un tocco ciascuno — **giorno** (1–31) → **mese** (gen–dic) → **anno** (anno corrente + 10). Le combinazioni impossibili (31 aprile, 29 febbraio negli anni non bisestili) e le date già passate sono disattivate. Freccia ← per tornare al passo precedente, ✕ o tocco sullo sfondo per chiudere.
    Sotto il pulsante compare la data in chiaro (es. "ven 4 dicembre 2026 · tra 7 giorni").
 4. Scelgo quanti pezzi con − / + (da 1 a 20, predefinito 1).
@@ -70,6 +74,12 @@ Il foglio si può aprire e modificare anche a mano.
 - Versione attuale dello script: **2** (la 2 ha aggiunto `ripristina`). Lo script restituisce la sua versione con `ping`.
 - Date salvate come date vere (formato gg/mm/aaaa nel foglio); accetta anche date scritte a mano come testo "31/12/2026".
 
+## Open Food Facts
+- Indirizzo: `https://world.openfoodfacts.org/api/v2/product/<codice>.json?fields=product_name_it,product_name,generic_name_it,generic_name,brands`. Gratuito, senza account né chiave.
+- Risposta: `status: 1` e `product` se trovato; 404 / `status: 0` se non presente.
+- La chiamata parte dal telefono (non dallo script Google). Si invia solo il codice a barre.
+- L'ambiente cloud di Claude Code non raggiunge il sito: le prove sono fatte con risposte simulate, la verifica vera è sul telefono.
+
 ## Sicurezza
 - Lo script Google (Web App) accetta richieste solo con la chiave segreta corretta, sia per leggere sia per scrivere.
 - Nessun dato personale nel repository pubblico.
@@ -91,9 +101,9 @@ Il foglio si può aprire e modificare anche a mano.
 | 2 | Google Sheet + Apps Script + schermata Impostazioni | fatto |
 | 3 | IN | fatto |
 | 4 | LISTA | fatto |
-| 5 | OUT | da provare su iPhone (richiede script versione 2) |
-| 6 | Nome da Open Food Facts + memoria nomi | da fare |
-| 7 | Rifiniture: icona, schermata Home | da fare |
+| 5 | OUT | fatto |
+| 6 | Nome da Open Food Facts + memoria nomi | da provare su iPhone |
+| 7 | Rifiniture: icona, schermata Home, togliere "Versione N" e "Opzioni fotocamera" dalla schermata principale (proposta: spostarli in Impostazioni) | da fare |
 | 8 | Avvisi email di scadenza | più avanti |
 
 ## Note tecniche
@@ -102,7 +112,7 @@ Il foglio si può aprire e modificare anche a mano.
   - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
   - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
-- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `lista.js` (lista dei prodotti), `finestra.js` (riquadro di scelta usato da OUT), `app.js` (schermate e operazioni).
+- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `lista.js` (lista dei prodotti), `finestra.js` (riquadro di scelta usato da OUT), `openfoodfacts.js` (nomi da Open Food Facts), `app.js` (schermate e operazioni).
 - Niente espressioni regolari con "lookbehind" `(?<…)`: non funzionano su iOS più vecchi di 16.4.
 - Sito: https://federicoamt.github.io/dispensa/
 - Da ricordare per la tappa 7: su iPhone l'app aggiunta alla schermata Home ha una memoria separata dal browser, quindi URL e chiave andranno reinseriti lì.
