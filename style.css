@@ -368,7 +368,8 @@ body.bloccato { overflow: hidden; }
 }
 .lista-testata .etichetta { margin-top: 8px; }
 
-#home .messaggio { margin: 4px 0; min-height: 0; }
+#home .messaggio { margin: 0 0 8px; min-height: 0; }
+#home .messaggio:empty { display: none; }
 
 button.link {
   padding: 8px 0 8px 12px;
@@ -500,3 +501,22 @@ button.grande.out { background: #455a64; }
 .fi-voce.arancione { background: var(--arancione-sfondo); border-color: var(--arancione-bordo); }
 .fi-voce.giallo    { background: var(--giallo-sfondo);    border-color: var(--giallo-bordo); }
 .fi-voce:active { opacity: 0.6; }
+
+/* ---------- Barra fissa in basso con Aggiungi / Togli ---------- */
+.barra-azioni {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  padding: 10px 16px calc(env(safe-area-inset-bottom) + 10px);
+  background: var(--sfondo);
+  border-top: 1px solid var(--bordo);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+}
+.barra-azioni > * { max-width: 520px; margin-left: auto; margin-right: auto; }
+.barra-azioni .messaggio { text-align: center; }
+
+/* Spazio in fondo alla pagina, così la barra non copre la fine della lista.
+   L'altezza della barra viene misurata in app.js. */
+body.con-barra { padding-bottom: var(--altezza-barra, 120px); }

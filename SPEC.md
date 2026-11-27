@@ -28,7 +28,7 @@ Pensato per chi non consuma sempre per primo il pezzo che scade prima (richiesta
 Nei riquadri: ← torna al passo precedente, ✕ o tocco sullo sfondo chiude.
 
 ### LISTA
-- Sta nella schermata principale, sotto i pulsanti "+ Aggiungi" e "− Togli". Titolo con il totale dei pezzi ("In dispensa · 10 pezzi").
+- Sta nella schermata principale. I pulsanti "+ Aggiungi" e "− Togli" sono in una **barra fissa in basso** (a portata di pollice, richiesta dell'utente), sempre visibile anche scorrendo; sopra i pulsanti, nella barra, compaiono i messaggi di conferma e il pulsante "Annulla". Titolo con il totale dei pezzi ("In dispensa · 10 pezzi").
 - Prodotti presenti ordinati per scadenza (prima quelli che scadono prima; quelli senza data in fondo).
 - Pezzi uguali (stesso codice, nome e scadenza) raggruppati in una riga con "×N".
 - Ogni riga: nome e data (gg/mm/aaaa). Solo le righe colorate (scadute o in scadenza entro 7 giorni) mostrano anche la distanza ("tra 5 giorni", "domani", "scade oggi", "scaduto da 2 giorni"): richiesta dell'utente, per non affollare la lista.

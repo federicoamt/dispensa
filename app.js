@@ -36,6 +36,7 @@ function mostra(parte) {
   sezioneScansione.hidden = parte !== 'scansione';
   formIn.hidden = parte !== 'in';
   el('opzioni-fotocamera').hidden = parte === 'in';
+  document.body.classList.toggle('con-barra', parte === 'home');
   window.scrollTo(0, 0);
 }
 
@@ -305,6 +306,13 @@ el('btn-annulla-in').addEventListener('click', () => {
 });
 
 // ---------- Avvio dell'app ----------
+// Misura l'altezza della barra in basso (cambia quando compare un messaggio o "Annulla")
+const barra = el('barra-azioni');
+const misuraBarra = () => document.body.style.setProperty('--altezza-barra', barra.offsetHeight + 'px');
+if (window.ResizeObserver) new ResizeObserver(misuraBarra).observe(barra);
+misuraBarra();
+document.body.classList.add('con-barra');
+
 Lista.mostraDallaMemoria(); // subito l'ultima lista conosciuta…
 Lista.carica();             // …poi quella aggiornata dal foglio
 

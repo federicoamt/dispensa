@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2e7d32">
   <title>Dispensa</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   <header>
@@ -22,13 +22,6 @@
 
     <!-- Schermata iniziale: i pulsanti delle operazioni -->
     <section id="home">
-      <div class="azioni">
-        <button id="btn-in" class="grande"><span class="segno">+</span> Aggiungi</button>
-        <button id="btn-out" class="grande out"><span class="segno">−</span> Togli</button>
-      </div>
-      <p id="messaggio" class="messaggio"></p>
-      <button id="btn-annulla-out" type="button" class="annulla-out" hidden>↩︎ Annulla</button>
-
       <!-- Lista dei prodotti in dispensa -->
       <div class="lista-testata">
         <p id="lista-titolo" class="etichetta">In dispensa</p>
@@ -37,6 +30,16 @@
       <p id="lista-riepilogo" class="riepilogo"></p>
       <ul id="lista-prodotti" class="prodotti"></ul>
       <p id="lista-stato" class="nota centrata"></p>
+
+      <!-- Barra fissa in basso (a portata di pollice): messaggi, Annulla e i due pulsanti -->
+      <div id="barra-azioni" class="barra-azioni">
+        <p id="messaggio" class="messaggio"></p>
+        <button id="btn-annulla-out" type="button" class="annulla-out" hidden>↩︎ Annulla</button>
+        <div class="azioni">
+          <button id="btn-in" class="grande"><span class="segno">+</span> Aggiungi</button>
+          <button id="btn-out" class="grande out"><span class="segno">−</span> Togli</button>
+        </div>
+      </div>
     </section>
 
     <!-- Fotocamera -->
@@ -140,7 +143,7 @@
   </div>
 
   <!-- Versione dell'app: si vede in fondo alla pagina -->
-  <p class="versione">Versione 11</p>
+  <p class="versione">Versione 12</p>
 
   <!-- Se qualcosa si rompe, mostra l'errore sullo schermo invece di non fare nulla -->
   <script>
@@ -157,16 +160,16 @@
   </script>
 
   <!-- Lettore di codici a barre gratuito (zxing-wasm, licenza MIT).
-       Il "?v=11" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
-  <script src="lib/zxing-reader.js?v=11"></script>
-  <script src="date.js?v=11"></script>
-  <script src="scanner.js?v=11"></script>
-  <script src="selettore-data.js?v=11"></script>
-  <script src="finestra.js?v=11"></script>
+       Il "?v=12" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
+  <script src="lib/zxing-reader.js?v=12"></script>
+  <script src="date.js?v=12"></script>
+  <script src="scanner.js?v=12"></script>
+  <script src="selettore-data.js?v=12"></script>
+  <script src="finestra.js?v=12"></script>
   <!-- Collegamento al Google Sheet e schermata Impostazioni -->
-  <script src="impostazioni.js?v=11"></script>
+  <script src="impostazioni.js?v=12"></script>
   <!-- Lista dei prodotti -->
-  <script src="lista.js?v=11"></script>
-  <script src="app.js?v=11"></script>
+  <script src="lista.js?v=12"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
