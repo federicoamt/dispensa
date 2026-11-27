@@ -14,6 +14,7 @@ const Lista = (() => {
   const btnAggiorna = document.getElementById('btn-aggiorna');
 
   let inCaricamento = false;
+  let ultimi = []; // gli ultimi prodotti mostrati (servono a OUT)
 
   /** 'scaduto' | 'arancione' | 'giallo' | '' */
   function livello(giorni) {
@@ -42,6 +43,7 @@ const Lista = (() => {
   }
 
   function mostra(prodotti) {
+    ultimi = prodotti;
     salvaInMemoria(prodotti);
     const gruppi = raggruppa(prodotti);
     elLista.innerHTML = '';
@@ -98,7 +100,7 @@ const Lista = (() => {
     }
     elRiepilogo.hidden = parti.length === 0;
 
-    if (!totale) stato('La dispensa è vuota. Aggiungi il primo prodotto con ➕');
+    if (!totale) stato('La dispensa è vuota. Aggiungi il primo prodotto con + Aggiungi');
   }
 
   function stato(testo, errore = false) {
@@ -146,5 +148,5 @@ const Lista = (() => {
 
   btnAggiorna.addEventListener('click', carica);
 
-  return { carica, mostra, mostraDallaMemoria, livello, raggruppa };
+  return { carica, mostra, mostraDallaMemoria, livello, raggruppa, prodotti: () => ultimi };
 })();

@@ -438,3 +438,65 @@ button.link {
 
 .centrata { text-align: center; }
 .nota.errore { color: #c62828; }
+
+/* ---------- Pulsanti Aggiungi / Togli ---------- */
+.azioni {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.azioni .grande { margin: 0; }
+button.grande.out { background: #455a64; }
+.segno { font-size: 1.5rem; line-height: 0; vertical-align: -0.08em; margin-right: 2px; }
+
+.annulla-out {
+  display: block;
+  margin: 0 auto 8px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--bordo);
+  background: var(--carta);
+  color: var(--testo);
+}
+
+/* ---------- Riquadro di scelta (OUT) ---------- */
+.fi-voci {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 62vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fi-voce {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 1.05rem;
+  border-radius: 12px;
+  border: 1px solid var(--bordo);
+  border-left: 6px solid var(--bordo);
+  background: var(--carta);
+  color: var(--testo);
+}
+.fi-voce.grande-voce {
+  justify-content: center;
+  min-height: 68px;
+  font-size: 1.2rem;
+  border-left-width: 1px;
+}
+.fi-testo { font-weight: 600; overflow-wrap: anywhere; }
+.fi-dettaglio { flex: 0 0 auto; font-size: 0.85rem; color: var(--grigio); text-align: right; }
+
+.fi-voce.scaduto   { background: var(--rosso-sfondo);     border-color: var(--rosso-bordo); }
+.fi-voce.arancione { background: var(--arancione-sfondo); border-color: var(--arancione-bordo); }
+.fi-voce.giallo    { background: var(--giallo-sfondo);    border-color: var(--giallo-bordo); }
+.fi-voce:active { opacity: 0.6; }

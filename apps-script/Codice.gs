@@ -8,12 +8,12 @@
  * La chiave segreta NON è scritta qui: viene creata dalla funzione "configura"
  * e conservata nelle proprietà dello script (visibili solo al proprietario).
  *
- * Versione script: 1
+ * Versione script: 2
  *
  * @OnlyCurrentDoc  (chiede a Google il permesso di usare SOLO questo foglio)
  */
 
-var VERSIONE_SCRIPT = 1;
+var VERSIONE_SCRIPT = 2;
 
 var FOGLI = {
   Dispensa: ['ID', 'CodiceBarre', 'Nome', 'Scadenza', 'DataEntrata'],
@@ -110,6 +110,7 @@ function doPost(e) {
       lista: azioneLista,
       aggiungi: azioneAggiungi,
       rimuovi: azioneRimuovi,
+      ripristina: azioneRipristina,
       nome: azioneNome,
     };
     var azione = azioni[richiesta.azione];
@@ -176,6 +177,26 @@ function azioneRimuovi(r) {
   foglioDa('Storico').appendRow(rimossa.slice(0, 5).concat([oggiSenzaOra()]));
   foglio.deleteRow(scelta + 2); // +2: intestazione e conteggio da 1
   return { ok: true, rimosso: rigaInOggetto(rimossa), prodotti: leggiDispensa() };
+}
+
+/**
+ * "Annulla" dopo un OUT: riporta in Dispensa il pezzo con quell'ID tolto per ultimo
+ * (lo cerca nello Storico, partendo dal fondo) e lo cancella dallo Storico.
+ */
+function azioneRipristina(r) {
+  var id = String(r.id || '');
+  if (!id) return { ok: false, errore: 'non_trovato' };
+  var storico = foglioDa('Storico');
+  var dati = valoriDati(storico);
+  for (var i = dati.length - 1; i >= 0; i--) {
+    if (String(dati[i][0]) !== id) continue;
+    var riga = dati[i].slice(0, 5);
+    var dispensa = foglioDa('Dispensa');
+    dispensa.getRange(dispensa.getLastRow() + 1, 1, 1, 5).setValues([riga]);
+    storico.deleteRow(i + 2);
+    return { ok: true, ripristinato: rigaInOggetto(riga), prodotti: leggiDispensa() };
+  }
+  return { ok: false, errore: 'non_trovato' };
 }
 
 /** Restituisce il nome ricordato per un codice a barre (o vuoto). */
@@ -274,7 +295,7 @@ function daTestoAData(testo) {
  * Accetta date vere e anche testo scritto a mano tipo "31/12/2026".
  */
 function daDataATesto(valore) {
-  if (valore instanceof Date && !isNaN(valore.getTime())) {
+  if (Object.prototype.toString.call(valore) === '[object Date]' && !isNaN(valore.getTime())) {
     return Utilities.formatDate(valore, fusoOrario(), 'yyyy-MM-dd');
   }
   var testo = String(valore || '').trim();

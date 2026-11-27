@@ -1,5 +1,5 @@
 // Dispensa — schermate e operazioni.
-// IN (aggiungere un prodotto) e schermata iniziale con la LISTA (lista.js).
+// IN (aggiungere), OUT (togliere) e schermata iniziale con la LISTA (lista.js).
 
 // ---------- Elementi della pagina ----------
 const el = (id) => document.getElementById(id);
@@ -43,6 +43,7 @@ function mostra(parte) {
 function tornaAllaHome() {
   Scanner.ferma();
   SelettoreData.chiudi();
+  Finestra.chiudi();
   mostra('home');
 }
 
@@ -53,6 +54,8 @@ function iniziaIn() {
     return;
   }
   mostraMessaggio('');
+  nascondiAnnulla();
+  el('titolo-scansione').textContent = 'Inquadra il codice a barre';
   mostra('scansione');
   Scanner.avvia(apriModuloIn);
 }
@@ -151,8 +154,150 @@ formIn.addEventListener('submit', async (e) => {
   }
 });
 
+// ---------- OUT: togliere un pezzo ----------
+let ultimoTolto = null; // per "Annulla"
+
+/** Passo 1: come scegliere il prodotto? */
+function iniziaOut() {
+  if (!Collegamento.eConfigurato()) {
+    mostraMessaggio('Prima collega il Google Sheet: tocca ⚙️ in alto a destra.', 'errore');
+    return;
+  }
+  nascondiAnnulla();
+  if (!Lista.prodotti().length) {
+    mostraMessaggio('La dispensa è vuota: non c\'è niente da togliere.');
+    return;
+  }
+  mostraMessaggio('');
+  Finestra.apri({
+    titolo: 'Togli un prodotto',
+    voci: [
+      { testo: '📷 Inquadra il codice', grande: true, azione: outInquadra },
+      { testo: '📋 Scegli dalla lista', grande: true, azione: outDallaLista },
+    ],
+  });
+}
+
+/** Passo 2a: inquadra il codice a barre. */
+function outInquadra() {
+  Finestra.chiudi();
+  el('titolo-scansione').textContent = 'Inquadra il prodotto da togliere';
+  mostra('scansione');
+  Scanner.avvia((codice) => {
+    mostra('home');
+    const pezzi = Lista.prodotti().filter((p) => p.codice === codice);
+    if (!pezzi.length) {
+      mostraMessaggio('Non trovato in dispensa (codice ' + codice + ').', 'errore');
+      return;
+    }
+    scegliScadenza(pezzi, null);
+  });
+}
+
+/** Passo 2b: scegli il prodotto dall'elenco (in ordine alfabetico). */
+function outDallaLista() {
+  const gruppi = {};
+  for (const p of Lista.prodotti()) {
+    const chiave = p.codice + '|' + p.nome;
+    (gruppi[chiave] = gruppi[chiave] || []).push(p);
+  }
+  const elenco = Object.values(gruppi)
+    .map((pezzi) => ({ pezzi, nome: pezzi[0].nome || '(senza nome)', prima: primaScadenza(pezzi) }))
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'it'));
+
+  Finestra.apri({
+    titolo: 'Scegli il prodotto',
+    indietro: iniziaOut,
+    voci: elenco.map((g) => ({
+      testo: g.nome + (g.pezzi.length > 1 ? '  ×' + g.pezzi.length : ''),
+      dettaglio: g.prima ? 'scade il ' + Data.breve(g.prima) : 'senza data',
+      classe: Lista.livello(Data.giorniMancanti(g.prima)),
+      azione: () => scegliScadenza(g.pezzi, outDallaLista),
+    })),
+  });
+}
+
+function primaScadenza(pezzi) {
+  return pezzi.map((p) => p.scadenza).filter(Boolean).sort()[0] || '';
+}
+
+/** Passo 3: quale scadenza togliere? (una riga per data, con il numero di pezzi) */
+function scegliScadenza(pezzi, indietro) {
+  const perData = {};
+  for (const p of pezzi) (perData[p.scadenza] = perData[p.scadenza] || []).push(p);
+  const date = Object.keys(perData).sort((a, b) => (a || '9999').localeCompare(b || '9999'));
+
+  Finestra.apri({
+    titolo: 'Quale scadenza togli?',
+    sottotitolo: pezzi[0].nome,
+    indietro,
+    voci: date.map((data) => {
+      const stessi = perData[data];
+      const liv = Lista.livello(Data.giorniMancanti(data));
+      const dettagli = [stessi.length === 1 ? '1 pezzo' : stessi.length + ' pezzi'];
+      if (liv) dettagli.push(Data.distanza(data));
+      // Di quelli con la stessa data, tolgo il pezzo entrato per primo
+      const pezzo = stessi.slice().sort((a, b) => (a.entrata || '').localeCompare(b.entrata || ''))[0];
+      return {
+        testo: data ? Data.breve(data) : 'senza data',
+        dettaglio: dettagli.join(' · '),
+        classe: liv,
+        azione: () => togli(pezzo),
+      };
+    }),
+  });
+}
+
+/** Passo 4: toglie il pezzo (lo sposta nello Storico) e offre "Annulla". */
+async function togli(pezzo) {
+  Finestra.chiudi();
+  mostra('home');
+  mostraMessaggio('Tolgo ' + pezzo.nome + '…');
+  try {
+    const r = await Collegamento.chiama('rimuovi', { id: pezzo.id });
+    Lista.mostra(r.prodotti || []);
+    const scadeva = r.rimosso.scadenza ? ' (scadeva il ' + Data.breve(r.rimosso.scadenza) + ')' : '';
+    mostraMessaggio('✅ Tolto: ' + r.rimosso.nome + scadeva, 'successo');
+    ultimoTolto = r.rimosso;
+    el('btn-annulla-out').hidden = false;
+  } catch (err) {
+    if (err.codice === 'non_trovato') {
+      mostraMessaggio('Questo pezzo era già stato tolto (forse dall\'altro telefono). Ho aggiornato la lista.', 'errore');
+      Lista.carica();
+    } else {
+      mostraMessaggio('❌ Non tolto: ' + err.message, 'errore');
+    }
+  }
+}
+
+function nascondiAnnulla() {
+  ultimoTolto = null;
+  el('btn-annulla-out').hidden = true;
+}
+
+/** "Annulla": rimette in dispensa l'ultimo pezzo tolto. */
+async function annullaOut() {
+  if (!ultimoTolto) return;
+  const pezzo = ultimoTolto;
+  nascondiAnnulla();
+  mostraMessaggio('Rimetto ' + pezzo.nome + ' in dispensa…');
+  try {
+    const r = await Collegamento.chiama('ripristina', { id: pezzo.id });
+    Lista.mostra(r.prodotti || []);
+    mostraMessaggio('↩︎ Rimesso in dispensa: ' + pezzo.nome, 'successo');
+  } catch (err) {
+    if (err.codice === 'azione_sconosciuta') {
+      mostraMessaggio('Per usare "Annulla" va prima aggiornato lo script Google alla versione 2.', 'errore');
+    } else {
+      mostraMessaggio('❌ Non annullato: ' + err.message, 'errore');
+    }
+  }
+}
+
 // ---------- Pulsanti ----------
 el('btn-in').addEventListener('click', iniziaIn);
+el('btn-out').addEventListener('click', iniziaOut);
+el('btn-annulla-out').addEventListener('click', annullaOut);
 el('btn-annulla-scansione').addEventListener('click', tornaAllaHome);
 el('btn-annulla-in').addEventListener('click', () => {
   mostraMessaggio('');

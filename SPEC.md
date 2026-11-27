@@ -9,7 +9,7 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 ## Funzioni
 
 ### IN — aggiungere un prodotto
-1. Tocco "➕ Aggiungi prodotto" → si apre la fotocamera → inquadro il codice a barre.
+1. Tocco "+ Aggiungi" → si apre la fotocamera → inquadro il codice a barre.
 2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi (tappa 6) su Open Food Facts. Richiesta dell'utente: il nome va chiesto **solo** se il prodotto non si trova in nessuna delle due liste. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive. Il nome proposto si può sempre modificare (il nuovo nome viene ricordato).
 3. Scelgo la data di scadenza con il pulsante **"📅 Scegli la data"** (unico modo, scelta dell'utente per semplicità): si apre una finestra dal basso con tre passaggi da un tocco ciascuno — **giorno** (1–31) → **mese** (gen–dic) → **anno** (anno corrente + 10). Le combinazioni impossibili (31 aprile, 29 febbraio negli anni non bisestili) e le date già passate sono disattivate. Freccia ← per tornare al passo precedente, ✕ o tocco sullo sfondo per chiudere.
    Sotto il pulsante compare la data in chiaro (es. "ven 4 dicembre 2026 · tra 7 giorni").
@@ -17,13 +17,18 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 5. Salvo → viene creata **una riga per ogni pezzo**, con la data di entrata (oggi). L'app torna alla schermata iniziale con la conferma e un elenco "Aggiunti adesso".
 
 ### OUT — togliere un prodotto
-1. Tocco "OUT" → inquadro il codice a barre.
-2. Se ci sono più pezzi con quel codice, viene tolto quello con la **scadenza più vicina**.
-3. La riga viene **spostata nel foglio `Storico`** con la data di uscita.
-4. Se il codice non è in dispensa: messaggio "Non trovato in dispensa", nessuna modifica.
+Pensato per chi non consuma sempre per primo il pezzo che scade prima (richiesta dell'utente):
+1. Tocco "− Togli" → si apre un riquadro dal basso con due scelte: **📷 Inquadra il codice** oppure **📋 Scegli dalla lista** (utile se il codice a barre è rovinato o perso).
+   - Inquadra: se il codice non è in dispensa → messaggio "Non trovato in dispensa", nessuna modifica.
+   - Scegli dalla lista: elenco dei prodotti in ordine alfabetico, con numero di pezzi e prima scadenza, colorati come nella lista.
+2. Riquadro **"Quale scadenza togli?"**: una riga per ogni data di scadenza di quel prodotto, con il numero di pezzi (e "tra x giorni" se in scadenza), colorata come nella lista. Si tocca la data da togliere. Il riquadro compare sempre, anche se c'è una sola data.
+3. Viene tolto **un pezzo** con quella scadenza (se ce ne sono più, quello entrato per primo) e **spostato nel foglio `Storico`** con la data di uscita.
+4. Conferma "✅ Tolto: Nome (scadeva il …)" con il pulsante **↩︎ Annulla**, che rimette il pezzo in dispensa (e lo toglie dallo Storico). Il pulsante resta finché non si fa un'altra operazione.
+5. Se nel frattempo il pezzo era già stato tolto dall'altro telefono: messaggio e lista aggiornata.
+Nei riquadri: ← torna al passo precedente, ✕ o tocco sullo sfondo chiude.
 
 ### LISTA
-- Sta nella schermata principale, sotto "➕ Aggiungi prodotto". Titolo con il totale dei pezzi ("In dispensa · 10 pezzi").
+- Sta nella schermata principale, sotto i pulsanti "+ Aggiungi" e "− Togli". Titolo con il totale dei pezzi ("In dispensa · 10 pezzi").
 - Prodotti presenti ordinati per scadenza (prima quelli che scadono prima; quelli senza data in fondo).
 - Pezzi uguali (stesso codice, nome e scadenza) raggruppati in una riga con "×N".
 - Ogni riga: nome e data (gg/mm/aaaa). Solo le righe colorate (scadute o in scadenza entro 7 giorni) mostrano anche la distanza ("tra 5 giorni", "domani", "scade oggi", "scaduto da 2 giorni"): richiesta dell'utente, per non affollare la lista.
@@ -59,9 +64,10 @@ Il foglio si può aprire e modificare anche a mano.
   - `ping` → versione dello script e numero di pezzi
   - `lista` → prodotti in dispensa ordinati per scadenza
   - `aggiungi` (codice, nome, scadenza `AAAA-MM-GG`, pezzi) → una riga per pezzo; ricorda il nome in `Prodotti`
-  - `rimuovi` (codice, oppure id) → sposta in `Storico` il pezzo con la scadenza più vicina
+  - `rimuovi` (codice, oppure id) → sposta in `Storico` il pezzo con quell'id (con il codice: quello con la scadenza più vicina)
+  - `ripristina` (id) → "Annulla": riporta il pezzo dallo `Storico` alla `Dispensa` (dalla versione 2 dello script)
   - `nome` (codice) → nome ricordato in `Prodotti`
-- Lo script è già completo per le tappe 3–6, così l'utente lo incolla una volta sola.
+- Versione attuale dello script: **2** (la 2 ha aggiunto `ripristina`). Lo script restituisce la sua versione con `ping`.
 - Date salvate come date vere (formato gg/mm/aaaa nel foglio); accetta anche date scritte a mano come testo "31/12/2026".
 
 ## Sicurezza
@@ -84,8 +90,8 @@ Il foglio si può aprire e modificare anche a mano.
 | 1 | Pagina con fotocamera che legge il codice a barre | fatto |
 | 2 | Google Sheet + Apps Script + schermata Impostazioni | fatto |
 | 3 | IN | fatto |
-| 4 | LISTA | da provare su iPhone |
-| 5 | OUT | da fare |
+| 4 | LISTA | fatto |
+| 5 | OUT | da provare su iPhone (richiede script versione 2) |
 | 6 | Nome da Open Food Facts + memoria nomi | da fare |
 | 7 | Rifiniture: icona, schermata Home | da fare |
 | 8 | Avvisi email di scadenza | più avanti |
@@ -96,7 +102,7 @@ Il foglio si può aprire e modificare anche a mano.
   - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
   - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
-- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `lista.js` (lista dei prodotti), `app.js` (schermate e operazioni).
+- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `selettore-data.js` (finestra giorno → mese → anno), `impostazioni.js` (collegamento al foglio e Impostazioni), `lista.js` (lista dei prodotti), `finestra.js` (riquadro di scelta usato da OUT), `app.js` (schermate e operazioni).
 - Niente espressioni regolari con "lookbehind" `(?<…)`: non funzionano su iOS più vecchi di 16.4.
 - Sito: https://federicoamt.github.io/dispensa/
 - Da ricordare per la tappa 7: su iPhone l'app aggiunta alla schermata Home ha una memoria separata dal browser, quindi URL e chiave andranno reinseriti lì.
