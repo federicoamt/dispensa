@@ -26,7 +26,7 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 - Sta nella schermata principale, sotto "➕ Aggiungi prodotto". Titolo con il totale dei pezzi ("In dispensa · 10 pezzi").
 - Prodotti presenti ordinati per scadenza (prima quelli che scadono prima; quelli senza data in fondo).
 - Pezzi uguali (stesso codice, nome e scadenza) raggruppati in una riga con "×N".
-- Ogni riga: nome, data (gg/mm/aaaa) e distanza ("tra 5 giorni", "domani", "scade oggi", "scaduto da 2 giorni").
+- Ogni riga: nome e data (gg/mm/aaaa). Solo le righe colorate (scadute o in scadenza entro 7 giorni) mostrano anche la distanza ("tra 5 giorni", "domani", "scade oggi", "scaduto da 2 giorni"): richiesta dell'utente, per non affollare la lista.
 - Colori (sfondo e bordo):
   - **Rosso**: scaduto
   - **Arancione**: scade oggi o entro 3 giorni

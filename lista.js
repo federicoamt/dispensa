@@ -70,10 +70,14 @@ const Lista = (() => {
       const data = document.createElement('span');
       data.className = 'data';
       data.textContent = g.scadenza ? Data.breve(g.scadenza) : 'senza data';
-      const distanza = document.createElement('span');
-      distanza.className = 'distanza';
-      distanza.textContent = g.scadenza ? Data.distanza(g.scadenza) : '';
-      destra.append(data, distanza);
+      destra.appendChild(data);
+      // "tra 2 giorni", "scaduto da…": solo per le righe colorate (scadute o in scadenza)
+      if (liv) {
+        const distanza = document.createElement('span');
+        distanza.className = 'distanza';
+        distanza.textContent = Data.distanza(g.scadenza);
+        destra.appendChild(distanza);
+      }
 
       li.append(sinistra, destra);
       elLista.appendChild(li);
