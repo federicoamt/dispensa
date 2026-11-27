@@ -5,14 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2e7d32">
   <title>Dispensa</title>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <header>
     <h1>Dispensa</h1>
+    <button id="btn-impostazioni" class="icona" aria-label="Impostazioni">⚙️</button>
   </header>
 
-  <main>
+  <!-- ===== Schermata principale ===== -->
+  <main id="vista-principale">
+    <!-- Avviso che compare finché il Google Sheet non è collegato -->
+    <button id="avviso-collegamento" class="avviso" hidden>
+      ⚠️ Google Sheet non collegato. Tocca qui per configurarlo.
+    </button>
+
     <!-- Riquadro della fotocamera -->
     <div id="lettore" class="lettore" hidden>
       <video id="video" playsinline muted autoplay></video>
@@ -48,8 +55,30 @@
     </details>
   </main>
 
+  <!-- ===== Schermata Impostazioni ===== -->
+  <main id="vista-impostazioni" hidden>
+    <h2>Impostazioni</h2>
+    <p class="nota">
+      Questi dati restano solo in questo telefono (in questo browser).
+      Vanno inseriti una volta su ogni telefono che usa l'app.
+    </p>
+
+    <label class="campo" for="campo-url">Indirizzo dello script</label>
+    <input id="campo-url" type="url" inputmode="url" autocomplete="off" autocapitalize="off"
+           spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec">
+
+    <label class="campo" for="campo-chiave">Chiave segreta</label>
+    <input id="campo-chiave" type="text" autocomplete="off" autocapitalize="off"
+           spellcheck="false" placeholder="incolla qui la chiave">
+
+    <button id="btn-salva-prova" class="grande">Salva e prova collegamento</button>
+    <p id="esito-collegamento" class="messaggio"></p>
+
+    <button id="btn-indietro" class="grande secondario">← Indietro</button>
+  </main>
+
   <!-- Versione dell'app: si vede in fondo alla pagina -->
-  <p class="versione">Versione 4</p>
+  <p class="versione">Versione 5</p>
 
   <!-- Se qualcosa si rompe, mostra l'errore sullo schermo invece di non fare nulla -->
   <script>
@@ -66,8 +95,10 @@
   </script>
 
   <!-- Lettore di codici a barre gratuito (zxing-wasm, licenza MIT).
-       Il "?v=4" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
-  <script src="lib/zxing-reader.js?v=4"></script>
-  <script src="app.js?v=4"></script>
+       Il "?v=5" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
+  <script src="lib/zxing-reader.js?v=5"></script>
+  <!-- Collegamento al Google Sheet e schermata Impostazioni -->
+  <script src="impostazioni.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

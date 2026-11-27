@@ -1,6 +1,6 @@
 # SPEC.md — Specifica dell'app "Dispensa"
 
-Ultimo aggiornamento: 2026-11-23
+Ultimo aggiornamento: 2026-11-27
 
 ## Scopo
 Tenere traccia di cosa c'è in dispensa e quando scade. Due utenti (coppia) vedono e modificano la stessa lista da iPhone.
@@ -31,9 +31,10 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 - Pezzi uguali con la stessa scadenza possono essere mostrati raggruppati (es. "Yogurt ×3").
 
 ### Impostazioni
+- Si aprono con ⚙️ in alto a destra (o toccando l'avviso giallo "Google Sheet non collegato").
 - Campi: indirizzo (URL) dello script Google e chiave segreta.
 - Salvati solo nel browser del telefono (non nel codice). Vanno inseriti una volta per ogni telefono/browser.
-- Pulsante "Prova collegamento".
+- Pulsante "Salva e prova collegamento": risponde "✅ Collegamento OK" con il numero di pezzi in dispensa, oppure spiega l'errore.
 
 ## Dati (Google Sheet)
 | Foglio | Colonne |
@@ -43,6 +44,19 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 | `Prodotti` | CodiceBarre, Nome |
 
 Il foglio si può aprire e modificare anche a mano.
+
+## Script Google (`apps-script/Codice.gs`)
+- Istruzioni per installarlo e aggiornarlo: `apps-script/ISTRUZIONI.md`.
+- La funzione `configura` (eseguita a mano una volta) crea i fogli e genera la chiave segreta, salvata nelle proprietà dello script (non nel codice). `cambiaChiave` ne crea una nuova.
+- Pubblicato come App web: "Esegui come: Me", "Chi ha accesso: Chiunque". Permessi limitati al solo foglio (`@OnlyCurrentDoc`).
+- L'app manda richieste POST (corpo JSON in `text/plain`) con `chiave` e `azione`:
+  - `ping` → versione dello script e numero di pezzi
+  - `lista` → prodotti in dispensa ordinati per scadenza
+  - `aggiungi` (codice, nome, scadenza `AAAA-MM-GG`, pezzi) → una riga per pezzo; ricorda il nome in `Prodotti`
+  - `rimuovi` (codice, oppure id) → sposta in `Storico` il pezzo con la scadenza più vicina
+  - `nome` (codice) → nome ricordato in `Prodotti`
+- Lo script è già completo per le tappe 3–6, così l'utente lo incolla una volta sola.
+- Date salvate come date vere (formato gg/mm/aaaa nel foglio); accetta anche date scritte a mano come testo "31/12/2026".
 
 ## Sicurezza
 - Lo script Google (Web App) accetta richieste solo con la chiave segreta corretta, sia per leggere sia per scrivere.
@@ -59,7 +73,7 @@ Il foglio si può aprire e modificare anche a mano.
 |---|---|---|
 | 0 | Preparazione: repository, CLAUDE.md, SPEC.md, GitHub Pages | fatto |
 | 1 | Pagina con fotocamera che legge il codice a barre | fatto |
-| 2 | Google Sheet + Apps Script + schermata Impostazioni | da fare |
+| 2 | Google Sheet + Apps Script + schermata Impostazioni | da provare su iPhone |
 | 3 | IN | da fare |
 | 4 | LISTA | da fare |
 | 5 | OUT | da fare |
@@ -74,3 +88,4 @@ Il foglio si può aprire e modificare anche a mano.
   - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
 - Sito: https://federicoamt.github.io/dispensa/
+- Da ricordare per la tappa 7: su iPhone l'app aggiunta alla schermata Home ha una memoria separata dal browser, quindi URL e chiave andranno reinseriti lì.
