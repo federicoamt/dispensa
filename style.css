@@ -249,35 +249,6 @@ button:active { opacity: 0.7; }
 
 form .nota { margin: 4px 0 0; color: var(--grigio); }
 
-.scorciatoie {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-
-.scorciatoie button {
-  padding: 12px 2px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border-radius: 10px;
-  border: 1px solid var(--bordo);
-  background: var(--carta);
-  color: var(--testo);
-}
-
-.scorciatoie button.attivo {
-  background: var(--verde);
-  border-color: var(--verde);
-  color: #fff;
-}
-
-label.sotto, p.sotto {
-  display: block;
-  margin: 10px 0 6px;
-  color: var(--grigio);
-  font-size: 0.9rem;
-}
-
 .data-leggibile {
   min-height: 1.4em;
   margin: 6px 0 0;

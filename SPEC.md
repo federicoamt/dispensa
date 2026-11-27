@@ -11,11 +11,8 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 ### IN — aggiungere un prodotto
 1. Tocco "➕ Aggiungi prodotto" → si apre la fotocamera → inquadro il codice a barre.
 2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi (tappa 6) su Open Food Facts. Richiesta dell'utente: il nome va chiesto **solo** se il prodotto non si trova in nessuna delle due liste. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive. Il nome proposto si può sempre modificare (il nuovo nome viene ricordato).
-3. Scelgo la data di scadenza in uno di tre modi:
-   - **pulsante "📅 Scegli la data"** (modo principale, richiesto dall'utente): si apre una finestra dal basso con tre passaggi da un tocco ciascuno — **giorno** (1–31) → **mese** (gen–dic) → **anno** (anno corrente + 10). Le combinazioni impossibili (31 aprile, 29 febbraio negli anni non bisestili) e le date già passate sono disattivate. Freccia ← per tornare al passo precedente, ✕ o tocco sullo sfondo per chiudere;
-   - scorciatoie: +3 giorni, +1 sett., +2 sett., +1 mese, +3 mesi, +6 mesi, +1 anno, +2 anni;
-   - campo di testo dove scrivere o "scansionare" (funzione Scansiona testo di iOS) la data stampata. Riconosce ad esempio `12/03/2027`, `12.03.27`, `120327`, `12 MAR 2027`, frasi intere tipo "da consumarsi entro il 12/03/27", `03/2027` o `MAR 2027` (= ultimo giorno del mese), `12/12` (= il prossimo 12 dicembre).
-   Sotto compare la data in chiaro (es. "ven 4 dicembre 2026 · tra 7 giorni"); se è già passata è in rosso (si può comunque salvare).
+3. Scelgo la data di scadenza con il pulsante **"📅 Scegli la data"** (unico modo, scelta dell'utente per semplicità): si apre una finestra dal basso con tre passaggi da un tocco ciascuno — **giorno** (1–31) → **mese** (gen–dic) → **anno** (anno corrente + 10). Le combinazioni impossibili (31 aprile, 29 febbraio negli anni non bisestili) e le date già passate sono disattivate. Freccia ← per tornare al passo precedente, ✕ o tocco sullo sfondo per chiudere.
+   Sotto il pulsante compare la data in chiaro (es. "ven 4 dicembre 2026 · tra 7 giorni").
 4. Scelgo quanti pezzi con − / + (da 1 a 20, predefinito 1).
 5. Salvo → viene creata **una riga per ogni pezzo**, con la data di entrata (oggi). L'app torna alla schermata iniziale con la conferma e un elenco "Aggiunti adesso".
 
@@ -71,6 +68,9 @@ Il foglio si può aprire e modificare anche a mano.
 - Prodotti senza codice a barre: **non gestiti** per ora.
 - Avvisi email di scadenza: **più avanti** (ultima tappa).
 - Lettura automatica della data di scadenza dalla foto: possibile miglioramento futuro.
+- Altri modi di inserire la scadenza, provati nella versione 6–7 e tolti nella versione 8 per semplicità (si possono riattivare):
+  - scorciatoie (+3 giorni, +1 sett., +2 sett., +1 mese, +3 mesi, +6 mesi, +1 anno, +2 anni);
+  - campo di testo per scrivere o "scansionare" (Scansiona testo di iOS) la data stampata. Il riconoscimento è già pronto e collaudato in `date.js` (funzione `Data.interpreta`).
 
 ## Tappe
 | # | Tappa | Stato |

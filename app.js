@@ -13,9 +13,7 @@ const inCodice = el('in-codice');
 const inNome = el('in-nome');
 const inNomeStato = el('in-nome-stato');
 const btnScegliData = el('btn-scegli-data');
-const inDataTesto = el('in-data-testo');
 const inDataLeggibile = el('in-data-leggibile');
-const elScorciatoie = el('scorciatoie');
 const elPezzi = el('pezzi-numero');
 const inErrore = el('in-errore');
 const btnSalva = el('btn-salva');
@@ -67,7 +65,6 @@ function apriModuloIn(codice) {
   inNome.value = '';
   inErrore.textContent = '';
   impostaScadenza('');
-  inDataTesto.value = '';
   elPezzi.textContent = '1';
   btnSalva.disabled = false;
   mostra('in');
@@ -94,14 +91,11 @@ async function cercaNome(codice) {
   }
 }
 
-/** Imposta la scadenza scelta e aggiorna pulsante della data, scorciatoie e testo leggibile. */
-function impostaScadenza(testo, origine) {
+/** Imposta la scadenza scelta e aggiorna il pulsante della data e il testo leggibile. */
+function impostaScadenza(testo) {
   modulo.scadenza = testo;
   btnScegliData.textContent = testo ? '📅 ' + Data.breve(testo) + ' (cambia)' : '📅 Scegli la data';
   btnScegliData.classList.toggle('scelta', Boolean(testo));
-  if (origine !== 'scorciatoia') {
-    for (const b of elScorciatoie.children) b.classList.remove('attivo');
-  }
   if (!testo) {
     inDataLeggibile.textContent = '';
     inDataLeggibile.className = 'data-leggibile';
@@ -113,39 +107,8 @@ function impostaScadenza(testo, origine) {
   inErrore.textContent = '';
 }
 
-elScorciatoie.addEventListener('click', (e) => {
-  const b = e.target.closest('button');
-  if (!b) return;
-  const data = Data.aggiungi({
-    giorni: parseInt(b.dataset.giorni || '0', 10),
-    mesi: parseInt(b.dataset.mesi || '0', 10),
-  });
-  for (const altro of elScorciatoie.children) altro.classList.toggle('attivo', altro === b);
-  inDataTesto.value = '';
-  impostaScadenza(data, 'scorciatoia');
-});
-
 btnScegliData.addEventListener('click', () => {
-  SelettoreData.apri((data) => {
-    inDataTesto.value = '';
-    impostaScadenza(data, 'selettore');
-  });
-});
-
-inDataTesto.addEventListener('input', () => {
-  const testo = inDataTesto.value.trim();
-  if (!testo) return impostaScadenza('');
-  const data = Data.interpreta(testo);
-  if (data) {
-    impostaScadenza(data, 'testo');
-  } else {
-    modulo.scadenza = '';
-    btnScegliData.textContent = '📅 Scegli la data';
-    btnScegliData.classList.remove('scelta');
-    for (const b of elScorciatoie.children) b.classList.remove('attivo');
-    inDataLeggibile.textContent = 'Non riconosco una data (es. 12/03/27, 03/2027, 12 MAR 2027).';
-    inDataLeggibile.className = 'data-leggibile errore';
-  }
+  SelettoreData.apri(impostaScadenza);
 });
 
 el('pezzi-meno').addEventListener('click', () => cambiaPezzi(-1));
