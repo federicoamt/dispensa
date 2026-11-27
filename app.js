@@ -1,269 +1,205 @@
-// Dispensa — Tappa 1: lettura del codice a barre con la fotocamera.
-// Per ora l'app legge il codice e lo mostra a schermo. Nessun dato viene salvato online.
-
-// ---------- Lettore di codici (zxing-wasm) ----------
-// Il "motore" del lettore è nel file lib/zxing_reader.wasm, servito dal nostro sito
-// (non da siti esterni).
-if (typeof ZXingWASM === 'undefined') {
-  throw new Error('il lettore di codici non si è caricato (lib/zxing-reader.js)');
-}
-ZXingWASM.prepareZXingModule({
-  overrides: {
-    locateFile: (percorso, prefisso) =>
-      percorso.endsWith('.wasm') ? new URL('lib/' + percorso, location.href).href : prefisso + percorso,
-  },
-});
-
-const OPZIONI_LETTURA = {
-  formats: ['EAN13', 'EAN8', 'UPCA', 'UPCE'], // codici dei prodotti al supermercato
-  tryHarder: true,
-  maxNumberOfSymbols: 1,
-};
-
-// Area di lettura rispetto al riquadro visibile (deve corrispondere al mirino nel CSS)
-const MIRINO_LARGHEZZA = 0.85;
-const MIRINO_ALTEZZA = 0.5;
+// Dispensa — schermate e operazioni.
+// Tappa 3: IN (aggiungere un prodotto).
 
 // ---------- Elementi della pagina ----------
-const elLettore = document.getElementById('lettore');
-const video = document.getElementById('video');
-const elZoom = document.getElementById('zoom');
-const btnScansiona = document.getElementById('btn-scansiona');
-const btnStop = document.getElementById('btn-stop');
-const elMessaggio = document.getElementById('messaggio');
-const elRisultato = document.getElementById('risultato');
-const elCodice = document.getElementById('codice');
-const elStorico = document.getElementById('storico-letture');
-const selCamera = document.getElementById('scelta-camera');
-const elDiagnosi = document.getElementById('diagnosi');
+const el = (id) => document.getElementById(id);
 
-// ---------- Preferenze salvate nel telefono ----------
-function leggiPreferenza(nome) {
-  try { return localStorage.getItem(nome); } catch (e) { return null; }
-}
-function salvaPreferenza(nome, valore) {
-  try { localStorage.setItem(nome, valore); } catch (e) { /* ignora */ }
-}
+const sezioneHome = el('home');
+const sezioneScansione = el('scansione');
+const formIn = el('form-in');
+const elMessaggio = el('messaggio');
 
-// ---------- Stato ----------
-let flusso = null;      // il "flusso" video della fotocamera
-let traccia = null;     // la traccia video (serve per lo zoom)
-let inScansione = false;
-let staLeggendo = false;
-const tela = document.createElement('canvas');
-const contesto = tela.getContext('2d', { willReadFrequently: true });
+const inCodice = el('in-codice');
+const inNome = el('in-nome');
+const inNomeStato = el('in-nome-stato');
+const inData = el('in-data');
+const inDataTesto = el('in-data-testo');
+const inDataLeggibile = el('in-data-leggibile');
+const elScorciatoie = el('scorciatoie');
+const elPezzi = el('pezzi-numero');
+const inErrore = el('in-errore');
+const btnSalva = el('btn-salva');
 
-function mostraMessaggio(testo, errore = false) {
+// ---------- Stato del modulo IN ----------
+const modulo = {
+  codice: '',
+  scadenza: '', // "AAAA-MM-GG"
+  pezzi: 1,
+};
+
+function mostraMessaggio(testo, tipo) {
   elMessaggio.textContent = testo;
-  elMessaggio.classList.toggle('errore', errore);
+  elMessaggio.className = 'messaggio' + (tipo ? ' ' + tipo : '');
 }
 
-// ---------- Avvio e stop della fotocamera ----------
-async function avviaScansione() {
-  elRisultato.hidden = true;
-  btnScansiona.hidden = true;
-  btnStop.hidden = false;
-  elLettore.hidden = false;
-  mostraMessaggio('Avvio fotocamera…');
+/** Mostra una sola parte della schermata principale: 'home', 'scansione' o 'in'. */
+function mostra(parte) {
+  sezioneHome.hidden = parte !== 'home';
+  sezioneScansione.hidden = parte !== 'scansione';
+  formIn.hidden = parte !== 'in';
+  el('opzioni-fotocamera').hidden = parte === 'in';
+  window.scrollTo(0, 0);
+}
 
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    fermaInterfaccia();
-    mostraMessaggio('Questo browser non permette di usare la fotocamera. Prova con Safari o Chrome aggiornati.', true);
+/** Torna alla schermata iniziale spegnendo la fotocamera (usata anche da Impostazioni). */
+function tornaAllaHome() {
+  Scanner.ferma();
+  mostra('home');
+}
+
+// ---------- IN: scansione ----------
+function iniziaIn() {
+  if (!Collegamento.eConfigurato()) {
+    mostraMessaggio('Prima collega il Google Sheet: tocca ⚙️ in alto a destra.', 'errore');
     return;
   }
+  mostraMessaggio('');
+  mostra('scansione');
+  Scanner.avvia(apriModuloIn);
+}
 
-  const idCamera = leggiPreferenza('camera');
-  const vincoli = {
-    audio: false,
-    video: {
-      width: { ideal: 1920 },
-      height: { ideal: 1080 },
-      ...(idCamera ? { deviceId: { exact: idCamera } } : { facingMode: { ideal: 'environment' } }),
-    },
-  };
+// ---------- IN: modulo ----------
+function apriModuloIn(codice) {
+  modulo.codice = codice;
+  modulo.pezzi = 1;
+  inCodice.textContent = codice;
+  inNome.value = '';
+  inErrore.textContent = '';
+  impostaScadenza('');
+  inDataTesto.value = '';
+  elPezzi.textContent = '1';
+  btnSalva.disabled = false;
+  mostra('in');
+  cercaNome(codice);
+}
 
+/** Cerca il nome già usato in passato per questo codice (foglio "Prodotti"). */
+async function cercaNome(codice) {
+  inNomeStato.textContent = 'Cerco il nome…';
   try {
-    flusso = await navigator.mediaDevices.getUserMedia(vincoli);
+    const r = await Collegamento.chiama('nome', { codice });
+    if (modulo.codice !== codice) return; // nel frattempo è cambiato prodotto
+    if (r.nome && !inNome.value.trim()) {
+      inNome.value = r.nome;
+      inNomeStato.textContent = '✓ Nome ricordato dall\'ultima volta (puoi modificarlo).';
+    } else if (!r.nome) {
+      inNomeStato.textContent = 'Prodotto nuovo: scrivi il nome, la prossima volta lo ricorderò.';
+    } else {
+      inNomeStato.textContent = '';
+    }
   } catch (err) {
-    if (idCamera) {
-      // La fotocamera scelta non è più disponibile: torno a quella automatica
-      salvaPreferenza('camera', '');
-      return riprovaAutomatica();
-    }
-    fermaInterfaccia();
-    mostraMessaggio(
-      'Non riesco ad aprire la fotocamera. Controlla di aver dato il permesso. (' + err.name + ')',
-      true
-    );
+    if (modulo.codice !== codice) return;
+    inNomeStato.textContent = 'Non riesco a cercare il nome (' + err.message + '). Scrivilo a mano.';
+  }
+}
+
+/** Imposta la scadenza scelta e aggiorna calendario, scorciatoie e testo leggibile. */
+function impostaScadenza(testo, origine) {
+  modulo.scadenza = testo;
+  if (origine !== 'calendario') inData.value = testo;
+  if (origine !== 'scorciatoia') {
+    for (const b of elScorciatoie.children) b.classList.remove('attivo');
+  }
+  if (!testo) {
+    inDataLeggibile.textContent = '';
+    inDataLeggibile.className = 'data-leggibile';
     return;
   }
-
-  traccia = flusso.getVideoTracks()[0];
-  video.srcObject = flusso;
-  try { await video.play(); } catch (e) { /* su iPhone parte comunque */ }
-
-  inScansione = true;
-  await preparaZoom();
-  aggiornaElencoCamere();
-  aggiornaDiagnosi();
-  mostraMessaggio('Inquadra il codice a barre dentro il riquadro…');
-  cicloLettura();
+  const giorni = Data.giorniMancanti(testo);
+  inDataLeggibile.textContent = Data.leggibile(testo) + ' · ' + Data.distanza(testo);
+  inDataLeggibile.className = 'data-leggibile' + (giorni < 0 ? ' errore' : ' scelta');
+  inErrore.textContent = '';
 }
 
-async function riprovaAutomatica() {
-  fermaInterfaccia();
-  await avviaScansione();
-}
-
-function fermaScansione() {
-  inScansione = false;
-  if (flusso) flusso.getTracks().forEach((t) => t.stop());
-  flusso = null;
-  traccia = null;
-  video.srcObject = null;
-  fermaInterfaccia();
-}
-
-function fermaInterfaccia() {
-  elLettore.hidden = true;
-  elZoom.hidden = true;
-  btnScansiona.hidden = false;
-  btnStop.hidden = true;
-}
-
-// ---------- Zoom ----------
-async function preparaZoom() {
-  elZoom.innerHTML = '';
-  elZoom.hidden = true;
-  const capacita = traccia.getCapabilities ? traccia.getCapabilities() : {};
-  if (!capacita.zoom) return; // questo telefono/browser non permette lo zoom
-
-  const min = capacita.zoom.min || 1;
-  const max = capacita.zoom.max || 1;
-  const livelli = [1, 1.5, 2, 3].filter((z) => z >= min && z <= max);
-  if (livelli.length < 2) return;
-
-  const salvato = parseFloat(leggiPreferenza('zoom'));
-  const iniziale = livelli.includes(salvato) ? salvato : (livelli.includes(1.5) ? 1.5 : livelli[0]);
-
-  for (const z of livelli) {
-    const b = document.createElement('button');
-    b.textContent = z + '×';
-    b.dataset.zoom = z;
-    b.addEventListener('click', () => impostaZoom(z));
-    elZoom.appendChild(b);
-  }
-  elZoom.hidden = false;
-  await impostaZoom(iniziale);
-}
-
-async function impostaZoom(z) {
-  if (!traccia) return;
-  try {
-    await traccia.applyConstraints({ advanced: [{ zoom: z }] });
-    salvaPreferenza('zoom', String(z));
-    for (const b of elZoom.children) b.classList.toggle('attivo', parseFloat(b.dataset.zoom) === z);
-  } catch (e) { /* zoom non applicabile: si continua senza */ }
-  aggiornaDiagnosi();
-}
-
-// ---------- Lettura continua dei fotogrammi ----------
-function cicloLettura() {
-  if (!inScansione) return;
-  setTimeout(async () => {
-    if (!inScansione) return;
-    if (!staLeggendo && video.readyState >= 2 && video.videoWidth > 0) {
-      staLeggendo = true;
-      try {
-        const codice = await leggiFotogramma();
-        if (codice && inScansione) return codiceLetto(codice);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        staLeggendo = false;
-      }
-    }
-    cicloLettura();
-  }, 120);
-}
-
-// Prende dal video, a piena risoluzione, solo la parte dentro il mirino e la passa al lettore.
-async function leggiFotogramma() {
-  const vw = video.videoWidth, vh = video.videoHeight;
-  const cw = video.clientWidth, ch = video.clientHeight;
-  // Il video riempie il riquadro tagliando i bordi ("cover"): calcolo la parte visibile
-  const scala = Math.max(cw / vw, ch / vh);
-  const visibileL = cw / scala, visibileA = ch / scala;
-  const w = Math.round(visibileL * MIRINO_LARGHEZZA);
-  const h = Math.round(visibileA * MIRINO_ALTEZZA);
-  const x = Math.round((vw - w) / 2);
-  const y = Math.round((vh - h) / 2);
-
-  tela.width = w;
-  tela.height = h;
-  contesto.drawImage(video, x, y, w, h, 0, 0, w, h);
-  const immagine = contesto.getImageData(0, 0, w, h);
-  const risultati = await ZXingWASM.readBarcodes(immagine, OPZIONI_LETTURA);
-  const valido = risultati.find((r) => r.isValid && r.text);
-  return valido ? valido.text : null;
-}
-
-function codiceLetto(codice) {
-  fermaScansione();
-  if (navigator.vibrate) navigator.vibrate(100);
-  elCodice.textContent = codice;
-  elRisultato.hidden = false;
-  mostraMessaggio('Letto! ✅');
-  aggiungiAlloStorico(codice);
-}
-
-function aggiungiAlloStorico(codice) {
-  const li = document.createElement('li');
-  li.textContent = codice;
-  const span = document.createElement('span');
-  span.textContent = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-  li.appendChild(span);
-  elStorico.prepend(li);
-  while (elStorico.children.length > 5) elStorico.lastChild.remove();
-}
-
-// ---------- Scelta della fotocamera ----------
-async function aggiornaElencoCamere() {
-  if (!navigator.mediaDevices.enumerateDevices) return;
-  const dispositivi = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === 'videoinput');
-  const scelta = leggiPreferenza('camera') || '';
-  selCamera.innerHTML = '<option value="">Automatica (posteriore)</option>';
-  dispositivi.forEach((d, i) => {
-    const o = document.createElement('option');
-    o.value = d.deviceId;
-    o.textContent = d.label || 'Fotocamera ' + (i + 1);
-    selCamera.appendChild(o);
+elScorciatoie.addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const data = Data.aggiungi({
+    giorni: parseInt(b.dataset.giorni || '0', 10),
+    mesi: parseInt(b.dataset.mesi || '0', 10),
   });
-  selCamera.value = scelta;
-}
+  for (const altro of elScorciatoie.children) altro.classList.toggle('attivo', altro === b);
+  inDataTesto.value = '';
+  impostaScadenza(data, 'scorciatoia');
+});
 
-selCamera.addEventListener('change', async () => {
-  salvaPreferenza('camera', selCamera.value);
-  if (inScansione) {
-    fermaScansione();
-    await avviaScansione();
+inData.addEventListener('change', () => {
+  inDataTesto.value = '';
+  impostaScadenza(inData.value, 'calendario');
+});
+
+inDataTesto.addEventListener('input', () => {
+  const testo = inDataTesto.value.trim();
+  if (!testo) return impostaScadenza('');
+  const data = Data.interpreta(testo);
+  if (data) {
+    impostaScadenza(data, 'testo');
+  } else {
+    modulo.scadenza = '';
+    inData.value = '';
+    for (const b of elScorciatoie.children) b.classList.remove('attivo');
+    inDataLeggibile.textContent = 'Non riconosco una data (es. 12/03/27, 03/2027, 12 MAR 2027).';
+    inDataLeggibile.className = 'data-leggibile errore';
   }
 });
 
-// Riga di informazioni tecniche: utile se qualcosa non funziona
-function aggiornaDiagnosi() {
-  if (!traccia) return;
-  const imp = traccia.getSettings ? traccia.getSettings() : {};
-  const cap = traccia.getCapabilities ? traccia.getCapabilities() : {};
-  elDiagnosi.textContent =
-    'Info: ' + (traccia.label || 'fotocamera') +
-    ' · ' + video.videoWidth + '×' + video.videoHeight +
-    ' · zoom ' + (cap.zoom ? (imp.zoom || 1) + '× (max ' + cap.zoom.max + '×)' : 'non disponibile');
+el('pezzi-meno').addEventListener('click', () => cambiaPezzi(-1));
+el('pezzi-piu').addEventListener('click', () => cambiaPezzi(+1));
+function cambiaPezzi(delta) {
+  modulo.pezzi = Math.max(1, Math.min(20, modulo.pezzi + delta));
+  elPezzi.textContent = String(modulo.pezzi);
+}
+
+formIn.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nome = inNome.value.trim();
+  if (!nome) {
+    inErrore.textContent = 'Scrivi il nome del prodotto.';
+    return inNome.focus();
+  }
+  if (!modulo.scadenza) {
+    inErrore.textContent = 'Scegli la data di scadenza.';
+    return;
+  }
+  inErrore.textContent = '';
+  btnSalva.disabled = true;
+  btnSalva.textContent = 'Salvo…';
+  try {
+    await Collegamento.chiama('aggiungi', {
+      codice: modulo.codice,
+      nome,
+      scadenza: modulo.scadenza,
+      pezzi: modulo.pezzi,
+    });
+    const quanti = modulo.pezzi > 1 ? ' ×' + modulo.pezzi : '';
+    mostraMessaggio('✅ Salvato: ' + nome + quanti + ' (scade il ' + Data.breve(modulo.scadenza) + ')', 'successo');
+    aggiungiAUltime(nome + quanti, Data.breve(modulo.scadenza));
+    mostra('home');
+  } catch (err) {
+    inErrore.textContent = '❌ Non salvato: ' + err.message;
+  } finally {
+    btnSalva.disabled = false;
+    btnSalva.textContent = 'Salva';
+  }
+});
+
+/** Piccolo elenco di conferma di ciò che è stato aggiunto in questa sessione. */
+function aggiungiAUltime(testo, scadenza) {
+  const lista = el('ultime-aggiunte');
+  const li = document.createElement('li');
+  li.textContent = testo;
+  const span = document.createElement('span');
+  span.textContent = scadenza;
+  li.appendChild(span);
+  lista.prepend(li);
+  while (lista.children.length > 5) lista.lastChild.remove();
+  el('sezione-ultime').hidden = false;
 }
 
 // ---------- Pulsanti ----------
-btnScansiona.addEventListener('click', avviaScansione);
-btnStop.addEventListener('click', () => {
-  fermaScansione();
+el('btn-in').addEventListener('click', iniziaIn);
+el('btn-annulla-scansione').addEventListener('click', tornaAllaHome);
+el('btn-annulla-in').addEventListener('click', () => {
   mostraMessaggio('');
+  mostra('home');
 });

@@ -119,8 +119,8 @@ const Collegamento = (() => {
   }
 
   function apriImpostazioni() {
-    // Se la fotocamera è accesa, la spegne (la funzione è in app.js)
-    if (typeof fermaScansione === 'function') fermaScansione();
+    // Se la fotocamera è accesa la spegne e riporta l'app alla schermata iniziale (funzione in app.js)
+    if (typeof tornaAllaHome === 'function') tornaAllaHome();
     const c = Collegamento.configurazione();
     campoUrl.value = c.url;
     campoChiave.value = c.chiave;

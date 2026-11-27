@@ -9,11 +9,15 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 ## Funzioni
 
 ### IN — aggiungere un prodotto
-1. Tocco "IN" → si apre la fotocamera → inquadro il codice a barre.
-2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi su Open Food Facts. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive.
-3. Scelgo la data di scadenza: scorciatoie (+3 giorni, +1 settimana, +1 mese, +3 mesi, +1 anno) oppure calendario. Su iPhone si può usare anche "Scansiona testo" di iOS.
-4. Scelgo quanti pezzi (1 / 2 / 3 / …, predefinito 1).
-5. Salvo → viene creata **una riga per ogni pezzo**, con la data di entrata (oggi).
+1. Tocco "➕ Aggiungi prodotto" → si apre la fotocamera → inquadro il codice a barre.
+2. L'app cerca il nome: prima nella memoria dei nomi (foglio `Prodotti`), poi (tappa 6) su Open Food Facts. Se non lo trova, chiede di scriverlo e lo salva in `Prodotti` per le volte successive. Il nome proposto si può sempre modificare (il nuovo nome viene ricordato).
+3. Scelgo la data di scadenza in uno di tre modi:
+   - scorciatoie: +3 giorni, +1 sett., +2 sett., +1 mese, +3 mesi, +6 mesi, +1 anno, +2 anni;
+   - calendario (selettore di data dell'iPhone);
+   - campo di testo dove scrivere o "scansionare" (funzione Scansiona testo di iOS) la data stampata. Riconosce ad esempio `12/03/2027`, `12.03.27`, `120327`, `12 MAR 2027`, frasi intere tipo "da consumarsi entro il 12/03/27", `03/2027` o `MAR 2027` (= ultimo giorno del mese), `12/12` (= il prossimo 12 dicembre).
+   Sotto compare la data in chiaro (es. "ven 4 dicembre 2026 · tra 7 giorni"); se è già passata è in rosso (si può comunque salvare).
+4. Scelgo quanti pezzi con − / + (da 1 a 20, predefinito 1).
+5. Salvo → viene creata **una riga per ogni pezzo**, con la data di entrata (oggi). L'app torna alla schermata iniziale con la conferma e un elenco "Aggiunti adesso".
 
 ### OUT — togliere un prodotto
 1. Tocco "OUT" → inquadro il codice a barre.
@@ -73,8 +77,8 @@ Il foglio si può aprire e modificare anche a mano.
 |---|---|---|
 | 0 | Preparazione: repository, CLAUDE.md, SPEC.md, GitHub Pages | fatto |
 | 1 | Pagina con fotocamera che legge il codice a barre | fatto |
-| 2 | Google Sheet + Apps Script + schermata Impostazioni | da provare su iPhone |
-| 3 | IN | da fare |
+| 2 | Google Sheet + Apps Script + schermata Impostazioni | fatto |
+| 3 | IN | da provare su iPhone |
 | 4 | LISTA | da fare |
 | 5 | OUT | da fare |
 | 6 | Nome da Open Food Facts + memoria nomi | da fare |
@@ -87,5 +91,7 @@ Il foglio si può aprire e modificare anche a mano.
   - La fotocamera è richiesta ad alta risoluzione (1920×1080) e si legge solo la parte dentro il mirino, a piena risoluzione.
   - Zoom 1× / 1,5× / 2× / 3× se il telefono lo permette (predefinito 1,5×, provato sull'iPhone: il migliore): si tiene il prodotto lontano (a fuoco) e lo zoom lo ingrandisce.
   - In "Opzioni fotocamera" si può scegliere quale fotocamera usare; zoom e fotocamera scelti restano memorizzati nel telefono.
+- File dell'app: `index.html` (pagina), `style.css` (grafica), `scanner.js` (fotocamera), `date.js` (calcoli e riconoscimento delle date), `impostazioni.js` (collegamento al foglio e Impostazioni), `app.js` (schermate e operazioni).
+- Niente espressioni regolari con "lookbehind" `(?<…)`: non funzionano su iOS più vecchi di 16.4.
 - Sito: https://federicoamt.github.io/dispensa/
 - Da ricordare per la tappa 7: su iPhone l'app aggiunta alla schermata Home ha una memoria separata dal browser, quindi URL e chiave andranno reinseriti lì.
