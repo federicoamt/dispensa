@@ -97,6 +97,11 @@ Il foglio si può aprire e modificare anche a mano.
   - scorciatoie (+3 giorni, +1 sett., +2 sett., +1 mese, +3 mesi, +6 mesi, +1 anno, +2 anni);
   - campo di testo per scrivere o "scansionare" (Scansiona testo di iOS) la data stampata. Il riconoscimento è già pronto e collaudato in `date.js` (funzione `Data.interpreta`).
 
+## Dove siamo (per riprendere)
+- Ultima versione pubblicata: **14**. Script Google: **versione 2** (installata dall'utente).
+- Tappe 0–6 completate e provate sull'iPhone.
+- Prossimo passo: **tappa 7 (rifiniture)** — icona e aggiunta alla schermata Home (ricordare che l'app dalla Home ha una memoria separata: URL e chiave vanno reinseriti), spostare "Versione N" e "Opzioni fotocamera" fuori dalla schermata principale (proposta: in Impostazioni, da confermare con l'utente). Poi tappa 8 (email di avviso).
+
 ## Tappe
 | # | Tappa | Stato |
 |---|---|---|
@@ -106,7 +111,7 @@ Il foglio si può aprire e modificare anche a mano.
 | 3 | IN | fatto |
 | 4 | LISTA | fatto |
 | 5 | OUT | fatto |
-| 6 | Nome da Open Food Facts + memoria nomi | da provare su iPhone |
+| 6 | Nome da Open Food Facts + memoria nomi (+ codice scritto a mano) | fatto |
 | 7 | Rifiniture: icona, schermata Home, togliere "Versione N" e "Opzioni fotocamera" dalla schermata principale (proposta: spostarli in Impostazioni) | da fare |
 | 8 | Avvisi email di scadenza | più avanti |
 
