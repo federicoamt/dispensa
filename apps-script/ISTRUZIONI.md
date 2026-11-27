@@ -21,7 +21,7 @@ Il codice da incollare è nel file [`Codice.gs`](Codice.gs) di questa cartella.
 3. La prima volta Google chiede l'autorizzazione:
    1. **"Autorizzazione necessaria"** → clicca **Esamina autorizzazioni**.
    2. Scegli il tuo account Google.
-   3. Compare **"Google non ha verificato questa app"**. È normale: l'app è il *tuo* script, non un'app pubblicata da un'azienda, quindi Google non l'ha controllata. Clicca **Avanzate** (in basso a sinistra), poi **Vai a Dispensa (non sicura)**.
+   3. *(Può anche non comparire: in quel caso passa al punto 4.)* Se compare **"Google non ha verificato questa app"**, è normale: l'app è il *tuo* script, non un'app pubblicata da un'azienda, quindi Google non l'ha controllata. Clicca **Avanzate** (in basso a sinistra), poi **Vai a Dispensa (non sicura)**.
    4. Google mostra cosa può fare lo script: *vedere e modificare il foglio di lavoro in cui è installato* (solo questo foglio). Se ci sono caselle da spuntare, spuntale tutte. Clicca **Consenti** (o **Continua**).
 4. In basso si apre il **Registro di esecuzione**. Dopo qualche secondo compare la riga:
    `LA TUA CHIAVE SEGRETA (copiala nell'app): …`
