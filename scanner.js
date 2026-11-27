@@ -36,6 +36,9 @@ const Scanner = (() => {
   let inScansione = false;
   let staLeggendo = false;
   let quandoLetto = null; // funzione da chiamare quando legge un codice
+  // Numero dell'accensione in corso: se nel frattempo si chiede di fermare la fotocamera,
+  // l'accensione (che richiede un attimo) si accorge di essere "vecchia" e si interrompe.
+  let accensione = 0;
   const tela = document.createElement('canvas');
   const contesto = tela.getContext('2d', { willReadFrequently: true });
 
@@ -53,6 +56,8 @@ const Scanner = (() => {
 
   // ---------- Avvio e stop ----------
   async function avvia(callback) {
+    const questa = ++accensione;
+    const superata = () => questa !== accensione;
     quandoLetto = callback;
     elLettore.hidden = false;
     stato('Avvio fotocamera…');
@@ -73,9 +78,11 @@ const Scanner = (() => {
       },
     };
 
+    let nuovoFlusso;
     try {
-      flusso = await navigator.mediaDevices.getUserMedia(vincoli);
+      nuovoFlusso = await navigator.mediaDevices.getUserMedia(vincoli);
     } catch (err) {
+      if (superata()) return;
       if (idCamera) {
         // La fotocamera scelta non è più disponibile: torno a quella automatica
         salvaPreferenza('camera', '');
@@ -86,12 +93,19 @@ const Scanner = (() => {
       return;
     }
 
+    if (superata()) {
+      nuovoFlusso.getTracks().forEach((t) => t.stop()); // nel frattempo è stata fermata
+      return;
+    }
+    flusso = nuovoFlusso;
     traccia = flusso.getVideoTracks()[0];
     video.srcObject = flusso;
     try { await video.play(); } catch (e) { /* su iPhone parte comunque */ }
+    if (superata()) return;
 
     inScansione = true;
     await preparaZoom();
+    if (superata()) return;
     aggiornaElencoCamere();
     aggiornaDiagnosi();
     stato('Inquadra il codice a barre dentro il riquadro…');
@@ -99,6 +113,7 @@ const Scanner = (() => {
   }
 
   function ferma() {
+    accensione++; // interrompe un'eventuale accensione in corso
     inScansione = false;
     if (flusso) flusso.getTracks().forEach((t) => t.stop());
     flusso = null;
@@ -227,5 +242,71 @@ const Scanner = (() => {
       ' · zoom ' + (cap.zoom ? (imp.zoom || 1) + '× (max ' + cap.zoom.max + '×)' : 'non disponibile');
   }
 
-  return { avvia, ferma };
+  // ---------- Codice scritto a mano ----------
+  const btnManuale = document.getElementById('btn-codice-manuale');
+  const formCodice = document.getElementById('form-codice');
+  const campoCodice = document.getElementById('campo-codice');
+  const erroreCodice = document.getElementById('errore-codice');
+  let codiceDaConfermare = ''; // codice con cifra di controllo sbagliata, già segnalato una volta
+
+  /** Controlla l'ultima cifra (cifra di controllo) dei codici EAN-13, EAN-8 e UPC-A. */
+  function cifraDiControlloGiusta(codice) {
+    const cifre = codice.split('').map(Number);
+    const controllo = cifre.pop();
+    let somma = 0;
+    cifre.reverse().forEach((c, i) => { somma += c * (i % 2 === 0 ? 3 : 1); });
+    return (10 - (somma % 10)) % 10 === controllo;
+  }
+
+  const titoloScansione = document.getElementById('titolo-scansione');
+
+  function preparaManuale() {
+    titoloScansione.hidden = false;
+    btnManuale.hidden = false;
+    formCodice.hidden = true;
+    campoCodice.value = '';
+    erroreCodice.textContent = '';
+    codiceDaConfermare = '';
+  }
+
+  btnManuale.addEventListener('click', () => {
+    const callback = quandoLetto;
+    ferma();             // spegne la fotocamera…
+    quandoLetto = callback; // …ma ricorda cosa fare con il codice
+    btnManuale.hidden = true;
+    titoloScansione.hidden = true; // "Inquadra…" non serve più
+    formCodice.hidden = false;
+    campoCodice.focus(); // apre subito il tastierino
+  });
+
+  campoCodice.addEventListener('input', () => {
+    erroreCodice.textContent = '';
+    codiceDaConfermare = '';
+  });
+
+  formCodice.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const codice = campoCodice.value.replace(/\D/g, '');
+    if (![8, 12, 13].includes(codice.length)) {
+      erroreCodice.textContent = 'Il codice deve avere 13 cifre (a volte 8 o 12). Ne hai scritte ' + codice.length + '.';
+      return;
+    }
+    if (!cifraDiControlloGiusta(codice) && codiceDaConfermare !== codice) {
+      codiceDaConfermare = codice;
+      erroreCodice.textContent = 'Forse c\'è una cifra sbagliata: ricontrolla. Se il codice è giusto, tocca di nuovo Conferma.';
+      return;
+    }
+    campoCodice.blur(); // chiude il tastierino
+    const callback = quandoLetto;
+    preparaManuale();
+    if (callback) callback(codice);
+  });
+
+  /** Avvia la fotocamera e prepara anche l'inserimento a mano. */
+  function avviaTutto(callback) {
+    preparaManuale();
+    return avvia(callback);
+  }
+
+  return { avvia: avviaTutto, ferma, cifraDiControlloGiusta };
 })();

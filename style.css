@@ -520,3 +520,13 @@ button.grande.out { background: #455a64; }
 /* Spazio in fondo alla pagina, così la barra non copre la fine della lista.
    L'altezza della barra viene misurata in app.js. */
 body.con-barra { padding-bottom: var(--altezza-barra, 120px); }
+
+/* ---------- Codice scritto a mano ---------- */
+.form-codice { margin-bottom: 12px; }
+.form-codice input {
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  font-family: ui-monospace, Menlo, monospace;
+  text-align: center;
+}
+#btn-codice-manuale { margin-top: 4px; }

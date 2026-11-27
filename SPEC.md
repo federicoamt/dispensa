@@ -20,10 +20,14 @@ Deve essere **veloce e semplice**: poche informazioni, pochi tocchi.
 4. Scelgo quanti pezzi con − / + (da 1 a 20, predefinito 1).
 5. Salvo → viene creata **una riga per ogni pezzo**, con la data di entrata (oggi). L'app torna alla schermata iniziale con la conferma e un elenco "Aggiunti adesso".
 
+### Codice scritto a mano (per codici a barre rovinati)
+- Nella schermata della fotocamera (sia per Aggiungi sia per Togli) c'è il pulsante **"⌨️ Scrivi il codice a mano"**: spegne la fotocamera e mostra un campo con il tastierino numerico + "Conferma". Poi si prosegue come se il codice fosse stato inquadrato.
+- Controlli: il codice deve avere 13 cifre (o 8 o 12); spazi e trattini vengono ignorati. Se la cifra di controllo (l'ultima) non torna, l'app avvisa di un probabile errore di battitura; toccando di nuovo "Conferma" con lo stesso codice lo accetta comunque.
+
 ### OUT — togliere un prodotto
 Pensato per chi non consuma sempre per primo il pezzo che scade prima (richiesta dell'utente):
 1. Tocco "− Togli" → si apre un riquadro dal basso con due scelte: **📷 Inquadra il codice** oppure **📋 Scegli dalla lista** (utile se il codice a barre è rovinato o perso).
-   - Inquadra: se il codice non è in dispensa → messaggio "Non trovato in dispensa", nessuna modifica.
+   - Inquadra (o scrivi il codice a mano): se il codice non è in dispensa → messaggio "Non trovato in dispensa", nessuna modifica.
    - Scegli dalla lista: elenco dei prodotti in ordine alfabetico, con numero di pezzi e prima scadenza, colorati come nella lista.
 2. Riquadro **"Quale scadenza togli?"**: una riga per ogni data di scadenza di quel prodotto, con il numero di pezzi (e "tra x giorni" se in scadenza), colorata come nella lista. Si tocca la data da togliere. Il riquadro compare sempre, anche se c'è una sola data.
 3. Viene tolto **un pezzo** con quella scadenza (se ce ne sono più, quello entrato per primo) e **spostato nel foglio `Storico`** con la data di uscita.
