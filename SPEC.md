@@ -97,7 +97,7 @@ Il foglio si può aprire e modificare anche a mano.
 ## Fuori dallo scopo (per ora)
 - Luogo (dispensa/frigo/freezer): deciso di **no**.
 - Prodotti senza codice a barre: **non gestiti** per ora.
-- Avvisi email di scadenza: **più avanti** (ultima tappa).
+- Avvisi email di scadenza: **non voluti** (deciso dall'utente dopo la tappa 7; tappa 8 annullata).
 - Lettura automatica della data di scadenza dalla foto: possibile miglioramento futuro.
 - Altri modi di inserire la scadenza, provati nella versione 6–7 e tolti nella versione 8 per semplicità (si possono riattivare):
   - scorciatoie (+3 giorni, +1 sett., +2 sett., +1 mese, +3 mesi, +6 mesi, +1 anno, +2 anni);
@@ -106,7 +106,7 @@ Il foglio si può aprire e modificare anche a mano.
 ## Dove siamo (per riprendere)
 - Ultima versione pubblicata: **15**. Script Google: **versione 2** (installata dall'utente).
 - Tappe 0–6 completate e provate sull'iPhone; tappa 7 pubblicata, da provare.
-- Prossimo passo: dopo la prova della tappa 7, **tappa 8 (email di avviso delle scadenze)**.
+- Tappa 8 (email di avviso) annullata su richiesta dell'utente. Dopo la prova della tappa 7 il piano iniziale è completo: eventuali nuove richieste vanno discusse con l'utente.
 
 ## Tappe
 | # | Tappa | Stato |
@@ -119,7 +119,7 @@ Il foglio si può aprire e modificare anche a mano.
 | 5 | OUT | fatto |
 | 6 | Nome da Open Food Facts + memoria nomi (+ codice scritto a mano) | fatto |
 | 7 | Rifiniture: icona, schermata Home, "Versione N" e "Opzioni fotocamera" spostati in Impostazioni | da provare su iPhone |
-| 8 | Avvisi email di scadenza | più avanti |
+| 8 | ~~Avvisi email di scadenza~~ | annullata: l'utente non la vuole |
 
 ## Note tecniche
 - Lettura codici a barre: libreria **zxing-wasm** 3.1.6 (licenza MIT), salvata in `lib/` (file `.js` + motore `.wasm`). Formati letti: EAN-13, EAN-8, UPC-A, UPC-E (i codici dei prodotti al supermercato).
