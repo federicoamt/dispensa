@@ -1,0 +1,15 @@
+{
+  "name": "Dispensa",
+  "short_name": "Dispensa",
+  "description": "Scorte di casa e scadenze",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f6f4",
+  "theme_color": "#2e7d32",
+  "icons": [
+    { "src": "icone/icona-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icone/icona-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

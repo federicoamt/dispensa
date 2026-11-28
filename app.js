@@ -35,7 +35,6 @@ function mostra(parte) {
   sezioneHome.hidden = parte !== 'home';
   sezioneScansione.hidden = parte !== 'scansione';
   formIn.hidden = parte !== 'in';
-  el('opzioni-fotocamera').hidden = parte === 'in';
   document.body.classList.toggle('con-barra', parte === 'home');
   window.scrollTo(0, 0);
 }

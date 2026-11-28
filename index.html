@@ -5,7 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2e7d32">
   <title>Dispensa</title>
-  <link rel="stylesheet" href="style.css?v=14">
+  <!-- App sulla schermata Home: nome, icona, apertura a tutto schermo -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icone/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icone/favicon-32.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Dispensa">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
   <header>
@@ -90,23 +98,15 @@
       <button id="btn-annulla-in" type="button" class="grande secondario">Annulla</button>
     </form>
 
-    <details id="opzioni-fotocamera" class="opzioni">
-      <summary>Opzioni fotocamera</summary>
-      <label for="scelta-camera">Fotocamera da usare</label>
-      <select id="scelta-camera">
-        <option value="">Automatica (posteriore)</option>
-      </select>
-      <p class="nota">L'elenco si riempie dopo la prima scansione. Se una fotocamera non mette a fuoco da vicino, provane un'altra.</p>
-      <p id="diagnosi" class="nota"></p>
-    </details>
   </main>
 
   <!-- ===== Schermata Impostazioni ===== -->
   <main id="vista-impostazioni" hidden>
     <h2>Impostazioni</h2>
     <p class="nota">
-      Questi dati restano solo in questo telefono (in questo browser).
-      Vanno inseriti una volta su ogni telefono che usa l'app.
+      Questi dati restano solo in questo telefono.
+      Vanno inseriti una volta su ogni telefono, e di nuovo nell'app aperta
+      dall'icona sulla schermata Home (ha una memoria separata dal browser).
     </p>
 
     <label class="campo" for="campo-url">Indirizzo dello script</label>
@@ -121,6 +121,19 @@
     <p id="esito-collegamento" class="messaggio"></p>
 
     <button id="btn-indietro" class="grande secondario">← Indietro</button>
+
+    <details id="opzioni-fotocamera" class="opzioni">
+      <summary>Opzioni fotocamera</summary>
+      <label for="scelta-camera">Fotocamera da usare</label>
+      <select id="scelta-camera">
+        <option value="">Automatica (posteriore)</option>
+      </select>
+      <p class="nota">L'elenco si riempie dopo la prima scansione. Se una fotocamera non mette a fuoco da vicino, provane un'altra.</p>
+      <p id="diagnosi" class="nota"></p>
+    </details>
+
+    <!-- Versione dell'app (utile per controllare di avere l'ultima) -->
+    <p class="versione">Versione 15</p>
   </main>
 
   <!-- ===== Selettore della data (giorno → mese → anno) ===== -->
@@ -153,8 +166,6 @@
     </div>
   </div>
 
-  <!-- Versione dell'app: si vede in fondo alla pagina -->
-  <p class="versione">Versione 14</p>
 
   <!-- Se qualcosa si rompe, mostra l'errore sullo schermo invece di non fare nulla -->
   <script>
@@ -171,18 +182,18 @@
   </script>
 
   <!-- Lettore di codici a barre gratuito (zxing-wasm, licenza MIT).
-       Il "?v=14" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
-  <script src="lib/zxing-reader.js?v=14"></script>
-  <script src="date.js?v=14"></script>
-  <script src="scanner.js?v=14"></script>
-  <script src="selettore-data.js?v=14"></script>
-  <script src="finestra.js?v=14"></script>
+       Il "?v=15" obbliga il telefono a scaricare la versione nuova invece di usare quella in memoria. -->
+  <script src="lib/zxing-reader.js?v=15"></script>
+  <script src="date.js?v=15"></script>
+  <script src="scanner.js?v=15"></script>
+  <script src="selettore-data.js?v=15"></script>
+  <script src="finestra.js?v=15"></script>
   <!-- Collegamento al Google Sheet e schermata Impostazioni -->
-  <script src="impostazioni.js?v=14"></script>
+  <script src="impostazioni.js?v=15"></script>
   <!-- Lista dei prodotti -->
-  <script src="lista.js?v=14"></script>
+  <script src="lista.js?v=15"></script>
   <!-- Nomi dei prodotti da Open Food Facts -->
-  <script src="openfoodfacts.js?v=14"></script>
-  <script src="app.js?v=14"></script>
+  <script src="openfoodfacts.js?v=15"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>

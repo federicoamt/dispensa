@@ -53,7 +53,13 @@ Nei riquadri: ← torna al passo precedente, ✕ o tocco sullo sfondo chiude.
 - Si aprono con ⚙️ in alto a destra (o toccando l'avviso giallo "Google Sheet non collegato").
 - Campi: indirizzo (URL) dello script Google e chiave segreta.
 - Salvati solo nel browser del telefono (non nel codice). Vanno inseriti una volta per ogni telefono/browser.
-- Pulsante "Salva e prova collegamento": risponde "✅ Collegamento OK" con il numero di pezzi in dispensa, oppure spiega l'errore.
+- Pulsante "Salva e prova collegamento": risponde "✅ Collegamento OK" con il numero di pezzi in dispensa e la versione dello script Google, oppure spiega l'errore.
+- In fondo: **Opzioni fotocamera** (scelta della fotocamera, riga "Info" di diagnosi) e il numero di **Versione** dell'app. Spostati qui dalla schermata principale nella versione 15 (richiesta dell'utente di toglierli dalla vista di tutti i giorni).
+
+### App sulla schermata Home
+- Icona: barattolo bianco su sfondo verde (`icone/`), nome "Dispensa", apertura a tutto schermo (senza barra del browser), barra di stato trasparente sopra l'intestazione verde. Definiti in `manifest.json` e nei `<meta>` di `index.html`.
+- L'app aperta dall'icona ha una memoria separata dal browser: indirizzo e chiave vanno reinseriti lì una volta.
+- Istruzioni per l'utente: `ISTRUZIONI-IPHONE.md` (da girare anche alla compagna).
 
 ## Dati (Google Sheet)
 | Foglio | Colonne |
@@ -98,9 +104,9 @@ Il foglio si può aprire e modificare anche a mano.
   - campo di testo per scrivere o "scansionare" (Scansiona testo di iOS) la data stampata. Il riconoscimento è già pronto e collaudato in `date.js` (funzione `Data.interpreta`).
 
 ## Dove siamo (per riprendere)
-- Ultima versione pubblicata: **14**. Script Google: **versione 2** (installata dall'utente).
-- Tappe 0–6 completate e provate sull'iPhone.
-- Prossimo passo: **tappa 7 (rifiniture)** — icona e aggiunta alla schermata Home (ricordare che l'app dalla Home ha una memoria separata: URL e chiave vanno reinseriti), spostare "Versione N" e "Opzioni fotocamera" fuori dalla schermata principale (proposta: in Impostazioni, da confermare con l'utente). Poi tappa 8 (email di avviso).
+- Ultima versione pubblicata: **15**. Script Google: **versione 2** (installata dall'utente).
+- Tappe 0–6 completate e provate sull'iPhone; tappa 7 pubblicata, da provare.
+- Prossimo passo: dopo la prova della tappa 7, **tappa 8 (email di avviso delle scadenze)**.
 
 ## Tappe
 | # | Tappa | Stato |
@@ -112,7 +118,7 @@ Il foglio si può aprire e modificare anche a mano.
 | 4 | LISTA | fatto |
 | 5 | OUT | fatto |
 | 6 | Nome da Open Food Facts + memoria nomi (+ codice scritto a mano) | fatto |
-| 7 | Rifiniture: icona, schermata Home, togliere "Versione N" e "Opzioni fotocamera" dalla schermata principale (proposta: spostarli in Impostazioni) | da fare |
+| 7 | Rifiniture: icona, schermata Home, "Versione N" e "Opzioni fotocamera" spostati in Impostazioni | da provare su iPhone |
 | 8 | Avvisi email di scadenza | più avanti |
 
 ## Note tecniche

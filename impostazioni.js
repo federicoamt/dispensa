@@ -128,12 +128,14 @@ const Collegamento = (() => {
     mostraEsito('');
     vistaPrincipale.hidden = true;
     vistaImpostazioni.hidden = false;
+    document.body.classList.remove('con-barra'); // qui la barra in basso non c'è
     window.scrollTo(0, 0);
   }
 
   function chiudiImpostazioni() {
     vistaImpostazioni.hidden = true;
     vistaPrincipale.hidden = false;
+    document.body.classList.add('con-barra');
     aggiornaAvviso();
     if (typeof Lista !== 'undefined') Lista.carica(); // il collegamento potrebbe essere cambiato
   }
@@ -154,7 +156,7 @@ const Collegamento = (() => {
     try {
       const r = await Collegamento.chiama('ping');
       const pezzi = r.pezzi === 1 ? '1 pezzo' : r.pezzi + ' pezzi';
-      mostraEsito('✅ Collegamento OK! In dispensa ci sono ' + pezzi + '.', 'successo');
+      mostraEsito('✅ Collegamento OK! In dispensa ci sono ' + pezzi + '. (Script Google versione ' + r.versioneScript + ')', 'successo');
     } catch (err) {
       mostraEsito('❌ ' + err.message, 'errore');
     } finally {
